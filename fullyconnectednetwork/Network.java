@@ -31,6 +31,8 @@ public class Network
         {
             this.output[i] = new double[NETWORK_LAYER_SIZES[i]];
             this.bias[i] = new double[NETWORK_LAYER_SIZES[i]];
+            
+            this.bias[i] = NetworkTools.createRandomArray(NETWORK_LAYER_SIZES[i], 0.3, 0.7);
 
             if (i > 0) // only create weights array for every layer except input layer.
             {
