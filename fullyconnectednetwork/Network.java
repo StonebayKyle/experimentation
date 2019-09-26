@@ -1,5 +1,7 @@
 // Followed tutorial by Finn Eggers
 
+package fullyconnectednetwork;
+
 import java.util.Arrays;
 
 public class Network

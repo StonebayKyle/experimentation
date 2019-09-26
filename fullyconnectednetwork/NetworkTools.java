@@ -6,7 +6,7 @@ public class NetworkTools
         double[] ar = new double[size];
         for (int i = 0; i < size; i++)
         {
-            ar[i] = init_value
+            ar[i] = init_value;
         }
         return ar;
     }
@@ -14,7 +14,7 @@ public class NetworkTools
     public static double[] createRandomArray(int size, double lower_bound, double upper_bound)
     {
         if (size < 1) { return null; }
-        double ar = new double[size];
+        double[] ar = new double[size];
         for (int i = 0; i < size; i++)
         {
             ar[i] = randomValue(lower_bound,upper_bound);
@@ -25,7 +25,7 @@ public class NetworkTools
     public static double[][] createRandomArray(int sizeX, int sizeY, double lower_bound, double upper_bound) // function overloading. Decides which function to run based on amount of parameters
     {
         if (sizeX < 1 || sizeY < 1) { return null; }
-        double ar = new double[sizeX][sizeY];
+        double[] ar = new double[sizeX][sizeY];
         for (int i = 0; i < sizeX; i++)
         {
             ar[i] = createRandomArray(sizeY,lower_bound,upper_bound); // nested for loop but using already made function
@@ -53,9 +53,10 @@ public class NetworkTools
             }
             values[i] = n;
         }
+        return values;
     }
 
-    public static <T extends Comparable<T>> boolean containsValue(T[] ar, T value)
+    public static <T extends Comparable<T>> boolean containsValue(T[] ar, T value) 
     {
         for (int i = 0; i < ar.length; i++)
         {
@@ -68,5 +69,18 @@ public class NetworkTools
             }
         }
         return false;
+    }
+
+    public static int indexOfHighestValue(double[] values)
+    {
+        int index = 0;
+        for (int i = 0; i < values.length; i++)
+        {
+            if (values[i] > values[index]) // sets index to any value greater than previous loops, getting the highest at the end.
+            {
+                index = i;
+            }
+        }
+        return index;
     }
 }
