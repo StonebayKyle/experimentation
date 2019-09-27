@@ -1,7 +1,5 @@
 // Followed tutorial by Finn Eggers
 
-package fullyconnectednetwork;
-
 import java.util.Arrays;
 
 public class Network
@@ -30,13 +28,12 @@ public class Network
         for (int i = 0; i < NETWORK_SIZE; i++)
         {
             this.output[i] = new double[NETWORK_LAYER_SIZES[i]];
-            this.bias[i] = new double[NETWORK_LAYER_SIZES[i]];
             
             this.bias[i] = NetworkTools.createRandomArray(NETWORK_LAYER_SIZES[i], 0.3, 0.7);
 
             if (i > 0) // only create weights array for every layer except input layer.
-            {
-                weights[i] = new double[NETWORK_LAYER_SIZES[i]][NETWORK_LAYER_SIZES[i-1]];
+            {   
+                weights[i] = NetworkTools.createRandomArray(NETWORK_LAYER_SIZES[i],NETWORK_LAYER_SIZES[i-1],-0.3,0.5);
             }
         }
     }

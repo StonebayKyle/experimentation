@@ -25,7 +25,7 @@ public class NetworkTools
     public static double[][] createRandomArray(int sizeX, int sizeY, double lower_bound, double upper_bound) // function overloading. Decides which function to run based on amount of parameters
     {
         if (sizeX < 1 || sizeY < 1) { return null; }
-        double[] ar = new double[sizeX][sizeY];
+        double[][] ar = new double[sizeX][sizeY];
         for (int i = 0; i < sizeX; i++)
         {
             ar[i] = createRandomArray(sizeY,lower_bound,upper_bound); // nested for loop but using already made function
@@ -62,7 +62,7 @@ public class NetworkTools
         {
             if (ar[i] != null)
             {
-                if (value.compareTo(ar[i] == 0))
+                if (value.compareTo(ar[i]) == 0)
                 {
                     return true;
                 }
