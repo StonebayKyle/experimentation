@@ -7,15 +7,18 @@ public class Network
 
     private double[][] output; // 2D: 1st for current layer, 2nd for current neuron. (output[layer][neuron])
     private double[][][] weights; // 3D: 1st for layer, 2nd for neuron, 3rd for neuron in previous layer.(weights[layer][neuron][prevNeuron])
-    private double[][] bias; // 2D: 1st for current layer, 2nd for current neuron. (bias[layer][neuron])    
+    private double[][] bias; // 2D: 1st for current layer, 2nd for current neuron. (bias[layer][neuron])  
+    
+    private double[][] error_signal;
+    private double[][] output_derivative;
 
     public final int[] NETWORK_LAYER_SIZES; // amount of neurons in layer at [index]
     public final int INPUT_SIZE; // amount of inputs
     public final int OUTPUT_SIZE; // amount of outputs
     public final int NETWORK_SIZE; // amount of layers
 
-    public Network(int... NETWORK_LAYER_SIZES)
-    {
+    public Network(int... NETWORK_LAYER_SIZES) // ... : 0 or more arguments may be passed through. this.* = NETWORK_LAYER_SIZES sets each next value placed in function paramater area to the corresponding value.
+    { // (makes an array out of NETWORK_LAYER-SIZES inputs)
         this.NETWORK_LAYER_SIZES = NETWORK_LAYER_SIZES;
         this.INPUT_SIZE = NETWORK_LAYER_SIZES[0];
         this.NETWORK_SIZE = NETWORK_LAYER_SIZES.length;
@@ -25,9 +28,14 @@ public class Network
         this.weights = new double[NETWORK_SIZE][][];
         this.bias = new double[NETWORK_SIZE][];
 
+        this.error_signal = new double[NETWORK_SIZE][];
+        this.output_derivative = new double[NETWORK_SIZE][];
+
         for (int i = 0; i < NETWORK_SIZE; i++)
         {
-            this.output[i] = new double[NETWORK_LAYER_SIZES[i]];
+            this.output[i] = new double[NETWORK_LAYER_SIZES[i]]; // each neuron has 1 output, 1 error signal, and 1 output derivative.
+            this.error_signal[i] = new double[NETWORK_LAYER_SIZES[i]];
+            this.output_derivative[i] = new double[NETWORK_LAYER_SIZES[i]];
             
             this.bias[i] = NetworkTools.createRandomArray(NETWORK_LAYER_SIZES[i], 0.3, 0.7);
 
@@ -53,9 +61,57 @@ public class Network
                 }
 
                 output[layer][neuron] = sigmoid(sum); // applies activation formula to sum and sets it to output
+                output_derivative[layer][neuron] = output[layer][neuron] * (1 - output[layer][neuron]);
             }
         }
         return output[NETWORK_SIZE-1]; // returns output. -1 because index start at 0 and last index is the arraylength (NETWORK_SIZE) -1.
+    }
+
+    public void train(double[] input, double[] target, double eta) // eta is learning rate
+    {
+        if (input.length != INPUT_SIZE || target.length != OUTPUT_SIZE) { return; } // data does not match and can't be used.
+        calculate(input);
+        backpropError(target);
+        updateWeights(eta);
+    }
+
+    public void backpropError(double[] target) // calculates error using the error formula
+    {
+        for (int neuron = 0; neuron < NETWORK_LAYER_SIZES[NETWORK_SIZE-1]; neuron++)
+        {
+            error_signal[NETWORK_SIZE-1][neuron] = (output[NETWORK_SIZE-1][neuron] - target[neuron])
+                * output_derivative[NETWORK_SIZE-1][neuron]; // finds the error signal in a neuron in current layer
+        }
+        for (int layer = NETWORK_SIZE-2; layer > 0; layer--) // NETWORK_SIZE-2 is index of last hidden layer. layer > 0 because we ignore input layer as it just passes data through and does not have error.
+        {
+            for (int neuron = 0; neuron < NETWORK_LAYER_SIZES[layer]; neuron++) // go through every neuron in layer
+            {
+                double sum = 0;
+                for (int nextNeuron = 0; nextNeuron < NETWORK_LAYER_SIZES[layer+1]; nextNeuron++ ) // layer+1 because that is the layer that the next neuron is in
+                {
+                    sum += weights[layer+1][nextNeuron][neuron] * error_signal[layer+1][nextNeuron]; // increase sum by weight that connects next neuron and current neuron
+                }
+                this.error_signal[layer][neuron] = sum * output_derivative[layer][neuron];
+            }
+
+        }
+    }
+
+    public void updateWeights(double eta)
+    {
+        for (int layer = 1; layer < NETWORK_SIZE; layer++) // starts at first hidden layer, until reach output layer
+        {
+            for (int neuron = 0; neuron < NETWORK_LAYER_SIZES[layer]; neuron++) // go through each neuron in the layer
+            {
+                // each neuron has multiple weights (from having multiple connections), but only one bias, so it is done outside of weights loop.
+                double delta = -eta * error_signal[layer][neuron]; // delta is change in bias
+                bias[layer][neuron] += delta;
+                for (int prevNeuron = 0; prevNeuron < NETWORK_LAYER_SIZES[layer-1]; prevNeuron++) // go through each previous neuron to get each weight
+                {
+                    weights[layer][neuron][prevNeuron] += delta * output[layer-1][prevNeuron]; // Uses previous delta because it is less calculations to do and is the same formula.
+                }
+            }
+        }
     }
 
     private double sigmoid(double x)
@@ -65,8 +121,15 @@ public class Network
 
     public static void main(String[] args)
     {
-        Network net = new Network(4,1,3,4);
-        double[] output = net.calculate(0.2,0.9,0.3,0.4);
-        System.out.println(Arrays.toString(output)); // should return all 0.5 due to everything resulting in 0 until activation function.
+        Network net = new Network(4,1,3,4); // first[0]: amount of input neurons. In between[1->last-1]: amount of neurons in each hidden layer. last[length-1]: amount of output neurons.
+        double[] input = new double[] { 0.1,0.5,0.2,0.9 }; // input data
+        double[] target = new double[] { 0,1,0,0 }; // target data; what the network is trying to reach.
+        
+        for (int i = 0; i < 100000; i++) // amount of times the AI is ran for training.
+        {
+            net.train(input, target, 0.1);
+        }
+        double[] output = net.calculate(input); // takes the AI's final guess
+        System.out.println(Arrays.toString(output)); // and prints it
     }
 }
