@@ -67,9 +67,21 @@ public class Network
         return output[NETWORK_SIZE-1]; // returns output. -1 because index start at 0 and last index is the arraylength (NETWORK_SIZE) -1.
     }
 
+    public void train(TrainSet set, int loops, int batch_size)
+    {
+        for (int i = 0; i < loops; i++)
+        {
+            TrainSet batch = set.extractBatch(batch_size); // extracts random data
+            for (int b = 0; b < batch_size; b++)
+            {
+                this.train(batch.getInput(b), batch.getOutput(b), 0.3); // sets train to get input and output
+            }
+        }
+    }
+
     public void train(double[] input, double[] target, double eta) // eta is learning rate
     {
-        if (input.length != INPUT_SIZE || target.length != OUTPUT_SIZE) { return; } // data does not match and can't be used.
+        if (input.length != INPUT_SIZE || target.length != OUTPUT_SIZE) { ; return; } // data does not match and can't be used.
         calculate(input);
         backpropError(target);
         updateWeights(eta);
@@ -121,15 +133,22 @@ public class Network
 
     public static void main(String[] args)
     {
-        Network net = new Network(4,1,3,4); // first[0]: amount of input neurons. In between[1->last-1]: amount of neurons in each hidden layer. last[length-1]: amount of output neurons.
-        double[] input = new double[] { 0.1,0.5,0.2,0.9 }; // input data
-        double[] target = new double[] { 0,1,0,0 }; // target data; what the network is trying to reach.
-        
-        for (int i = 0; i < 100000; i++) // amount of times the AI is ran for training.
+        // generally have the highest amount of neurons first, and go down until the lowest (i.e no 4,100,3,2)
+        Network net = new Network(4,3,3,2); // first[0]: amount of input neurons. In between[1->last-1]: amount of neurons in each hidden layer. last[length-1]: amount of output neurons.
+        // MATCH input and output data amounts with input and output neuron amounts, else data won't match Network and it will not train.
+
+        TrainSet set = new TrainSet(4,2); // input size, output size
+                                // data                     // labels
+        set.addData(new double[]{0.1,0.2,0.3,0.4}, new double[]{0.9,0.1}); // adds sets of new data to be trained with
+        set.addData(new double[]{0.9,0.8,0.7,0.6}, new double[]{0.1,0.9});
+        set.addData(new double[]{0.8,0.3,0.1,0.4}, new double[]{0.3,0.7});
+        set.addData(new double[]{0.9,0.8,0.1,0.2}, new double[]{0.7,0.3});
+
+        net.train(set, 100000, 4); // dataset group, amount of loops/iterations to run, batchsize
+
+        for (int i = 0; i < 4; i++) // runs for each dataset
         {
-            net.train(input, target, 0.1);
+            System.out.println(Arrays.toString(net.calculate(set.getInput(i)))); // Prints the arrays of the trained and calculated result of the set input.
         }
-        double[] output = net.calculate(input); // takes the AI's final guess
-        System.out.println(Arrays.toString(output)); // and prints it
     }
 }
