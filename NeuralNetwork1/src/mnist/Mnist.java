@@ -14,7 +14,7 @@ public class Mnist {
     public static void main(String[] args) {
         Network network = new Network(784, 70, 35, 10); // Neurons: 28*28 = 784 for input layer. 70 in first hidden layer, 35 in second hidden layer, 10 output.
         TrainSet set = createTrainSet(0,4999); // training set
-        trainData(network, set, 10, 50, 100); // Network, TrainSet, epochs, loops, batch_size
+        trainData(network, set, 75, 50, 100); // Network, TrainSet, epochs, loops, batch_size
 
         TrainSet testSet = createTrainSet(5000,9999); // testing set
         testTrainSet(network, testSet, 10);
@@ -77,6 +77,6 @@ public class Mnist {
                 System.out.println(i + ": " + (double)correct / (double) (i + 1)); // calculates output
             }
         }
-        System.out.println("Testing finished, RESULT: " + correct + " / " + set.size()+ "  -> " + (double)correct / (double)set.size() +" %");
+        System.out.println("Testing finished, RESULT: " + correct + " / " + set.size()+ "  -> " + ((double)correct / (double)set.size())*100.0 +" %");
     }
 }

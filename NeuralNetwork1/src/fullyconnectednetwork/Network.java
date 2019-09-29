@@ -41,11 +41,11 @@ public class Network
             this.error_signal[i] = new double[NETWORK_LAYER_SIZES[i]];
             this.output_derivative[i] = new double[NETWORK_LAYER_SIZES[i]];
             
-            this.bias[i] = NetworkTools.createRandomArray(NETWORK_LAYER_SIZES[i], 0.3, 0.7);
+            this.bias[i] = NetworkTools.createRandomArray(NETWORK_LAYER_SIZES[i], -0.5, 0.7); // may need to change lower and upper bound for weights and biases..
 
             if (i > 0) // only create weights array for every layer except input layer.
             {   
-                weights[i] = NetworkTools.createRandomArray(NETWORK_LAYER_SIZES[i],NETWORK_LAYER_SIZES[i-1],-0.3,0.5);
+                weights[i] = NetworkTools.createRandomArray(NETWORK_LAYER_SIZES[i],NETWORK_LAYER_SIZES[i-1],-1.0,1.0); // .. if learning ever gets stuck at a certain high error number. It increases initial scope so it will learn more of the learning curve.
             }
         }
     }
