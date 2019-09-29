@@ -95,7 +95,7 @@ public class Network {
         } // data does not match and can't be used.
         for (int i = 0; i < loops; i++) {
             TrainSet batch = set.extractBatch(batch_size); // extracts random data
-            for (int b = 0; b < batch_size; b++) {
+            for (int b = 0; b < batch.size(); b++) {
                 this.train(batch.getInput(b), batch.getOutput(b), 0.3); // sets train to use input and output
             }
             System.out.println(MSE(batch)); // prints mean square error of the batch to keep track of how good the
