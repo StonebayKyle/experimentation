@@ -12,19 +12,21 @@ import java.io.File;
 public class Mnist {
 
     public static void main(String[] args) {
-        // Network network = new Network(784, 70, 10); // Neurons: 28*28 = 784 for input
+        Network network = new Network(784, 60,20, 10); // Neurons: 28*28 = 784 for input
         // layer. 70 in first hidden
         // // layer, ..., 10 output.
-        // trainData(network, createTrainSet(0, 100), 1000, 100, 100, "res/mnist1.txt");
+        trainData(network, createTrainSet(0, 4999), 100, 50, 100, "res/mnist1.txt");
         // // Network, TrainSet, epochs, loops, batch_size, output file string
 
         try {
             Network net = Network.loadNetwork("res/mnist1.txt");
-            testTrainSet(net, createTrainSet(1000,2000), 10);
+            testTrainSet(net, createTrainSet(5000,9999), 10);
         } catch (Exception e) {
             // Auto-generated catch block
             e.printStackTrace();
         }
+
+
         // TrainSet testSet = createTrainSet(5000, 9999); // testing set
         // testTrainSet(network, testSet, 10);
     }
