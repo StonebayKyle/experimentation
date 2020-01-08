@@ -12,7 +12,7 @@ import java.io.File;
 public class Mnist {
 
     public static void main(String[] args) {
-        Network network = new Network(784, 60,20, 10); // Neurons: 28*28 = 784 for input
+        Network network = new Network(784, 60,20,15, 10); // Neurons: 28*28 = 784 for input
         // layer. 70 in first hidden
         // // layer, ..., 10 output.
         trainData(network, createTrainSet(0, 4999), 100, 50, 100, "res/mnist1.txt");
