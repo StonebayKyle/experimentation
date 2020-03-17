@@ -17,37 +17,43 @@ public class InitHelper {
         return label;
     }
 
-    public static JTextField initTextField(int x, int y, String fieldText) {
-        JTextField textField = new JTextField(fieldText);
+    public static JTextField initTextField(int x, int y, String defaultText) {
+        JTextField textField = new JTextField(defaultText);
         textField.setBounds(x, y, 80, 25);
         
-        textField = (JTextField)addDefaultTextClear(textField);
+        textField = (JTextField)addDefaultTextClear(textField, defaultText);
 
         return textField;
     }
 
     // should be used with JScrollPane
-    public static JTextArea initTextArea(String text) {
-        JTextArea textArea = new JTextArea(text);
+    public static JTextArea initTextArea(String defaultText) {
+        JTextArea textArea = new JTextArea(defaultText);
         textArea.setLineWrap(true);
 
-        textArea = (JTextArea)addDefaultTextClear(textArea);
+        textArea = (JTextArea)addDefaultTextClear(textArea, defaultText);
 
         return textArea;
     }
 
-    public static JTextComponent addDefaultTextClear(JTextComponent textComponent) {
+    public static JTextComponent addDefaultTextClear(JTextComponent textComponent, String defaultText) {
         textComponent.setFont(textComponent.getFont().deriveFont(2));
         
         textComponent.addFocusListener(new FocusListener() {
             @Override
-			public void focusGained(FocusEvent e) { 
-                textComponent.setText("");
-                textComponent.setFont(textComponent.getFont().deriveFont(0));
-                textComponent.removeFocusListener(this);
+			public void focusGained(FocusEvent e) {
+                if (textComponent.getFont().getStyle() == 2) {
+                    textComponent.setFont(textComponent.getFont().deriveFont(0));
+                    textComponent.setText("");
+                }
             }
 			@Override
-			public void focusLost(FocusEvent e) {}
+			public void focusLost(FocusEvent e) {
+                if (textComponent.getText().equals("")) {
+                    textComponent.setFont(textComponent.getFont().deriveFont(2));
+                    textComponent.setText(defaultText);
+                }
+            }
         });
 
         return textComponent;
