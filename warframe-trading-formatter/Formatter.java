@@ -1,27 +1,93 @@
 import java.util.ArrayList;
+import java.lang.StringBuilder;
 
 public class Formatter {
 
     private ArrayList<String> items;
 
+    private boolean needBrackets;
+    private boolean needSpacesBetween;
+    private boolean shouldRemoveOutstandingSpaces;
+
+    private String prefix;
+    private String suffix;
+
+
     private String finalOutput;
 
     public Formatter(ArrayList<String> items) {
         this.items = items;
+
+        needBrackets = false;
+        needSpacesBetween = false;
+        shouldRemoveOutstandingSpaces = false;
+
+        prefix = "";
+        suffix = "";
     }
 
-    public void placeBrackets() {
+    public Formatter(ArrayList<String> items, boolean needBrackets, boolean needSpacesBetween, boolean shouldRemoveOutstandingSpaces,
+                        String prefix, String suffix) {
+        this.items = items;
 
+        this.needBrackets = needBrackets;
+        this.needSpacesBetween = needSpacesBetween;
+        this.shouldRemoveOutstandingSpaces = shouldRemoveOutstandingSpaces;
+
+        this.prefix = prefix;
+        this.suffix = suffix;
     }
 
-    public void placeStarts() {
-
+    public void setModifications() {
+        for (int i = 0; i < items.size(); i++) {
+            items.set(i, getModifiedString(items.get(i), i)); 
+        }
     }
 
-    public void placeEnds() {
+    private String getModifiedString(String item, int i) {
+        if (shouldRemoveOutstandingSpaces) {
+            item = removeOutstandingSpaces(item);
+        }
 
+        StringBuilder itemBuilder = new StringBuilder(item);
+        itemBuilder = modifyStart(itemBuilder);
+        
+        String output = itemBuilder.toString();
+        output = modifyEnd(output);
+
+        if (needSpacesBetween && i != items.size()-1) output += " ";
+
+        return output;
     }
 
+    private StringBuilder modifyStart(StringBuilder itemBuilder) {
+        if (needBrackets) itemBuilder.insert(0, "[");
+        itemBuilder.insert(0, prefix);
+
+        return itemBuilder;
+    }
+
+    private String modifyEnd(String item) {
+        if (needBrackets) item += "]";
+        item += suffix;
+
+        return item;
+    }
+
+    // Removes (likely accidental) spaces at the beginning and end of an item
+    private String removeOutstandingSpaces(String item) {
+        // from front
+        while (item.substring(0,1).equals(" ")) {
+            item = item.substring(1,item.length());
+        }
+        // from back
+        while (item.substring(item.length()-1, item.length()).equals(" ")) {
+            item = item.substring(0, item.length()-2);
+        }
+
+        return item;
+    }
+    
     public String getFinalOutput() {
         finalOutput = updateFinalOutput();
         return finalOutput; 
@@ -29,8 +95,8 @@ public class Formatter {
 
     private String updateFinalOutput() {
         String output = "";
-        for (int i = 0; i < items.size(); i++) {
-            output += items.get(i) + " ";
+        for (String item : items) {
+            output += item;
         }
 
         return output;
