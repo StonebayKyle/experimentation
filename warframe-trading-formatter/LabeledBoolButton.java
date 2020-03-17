@@ -15,14 +15,12 @@ public class LabeledBoolButton extends JPanel implements ActionListener {
     private static final int HEIGHT = 32; // should be half of testing height in order to not overlap with whitespace.
 
     public LabeledBoolButton(int x, int y, String labelText, boolean isOn, String onText, String offText) {
-        // setBounds(x, y, 200, 65);
         init(labelText, isOn, onText, offText);
         
         setBounds(x, y, boolButton.getX()+(int)(boolButton.getWidth()*1.3), HEIGHT);
     }
 
     public LabeledBoolButton(int x, int y, String labelText, boolean isOn, String onText, String offText, String defaultLabelText) {
-        // setBounds(x, y, 200, 65);
         init(labelText, isOn, onText, offText);
 
         defaultLabel = InitHelper.initLabel(boolButton.getX()+(int)(boolButton.getWidth()*1.1), 0, defaultLabelText);
