@@ -17,16 +17,20 @@ public class InitHelper {
         return label;
     }
 
-    public static JTextField initTextField(int x, int y, String defaultText) {
+    public static JTextField initTextField(int x, int y, int w, int h, String defaultText) {
         JTextField textField = new JTextField(defaultText);
-        textField.setBounds(x, y, 80, 25);
+        textField.setBounds(x, y, w, h);
         
         textField = (JTextField)addDefaultTextClear(textField, defaultText);
 
         return textField;
     }
 
-    // should be used with JScrollPane
+    public static JTextField initTextField(int x, int y, String defaultText) {
+        return initTextField(x, y, 80, 25, defaultText);
+    }
+
+    // should be used with JScrollPane or similar container
     public static JTextArea initTextArea(String defaultText) {
         JTextArea textArea = new JTextArea(defaultText);
         textArea.setLineWrap(true);
