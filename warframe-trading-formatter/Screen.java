@@ -20,6 +20,7 @@ public class Screen extends JPanel implements ActionListener {
     private LabeledBoolButton removeOutstandingSpacesBoolButton;
 
     private LabeledField prefixField;
+    private LabeledField betweenField;
     private LabeledField suffixField;
     private LabeledField separatorField;
 
@@ -71,19 +72,25 @@ public class Screen extends JPanel implements ActionListener {
     }
 
     private void initLeftCol() {
-        int offset = 300, numDown = 0; // pixels from top
+        int offset = 300, numDown = 0; // pixels from top (height)
         bracketBoolButton = new LabeledBoolButton(10, offset + numDown, "Linkable Brackets:", true, "ON", "OFF");
         add(bracketBoolButton);
         numDown += LabeledBoolButton.getHEIGHT();
 
+
         prefixField = new LabeledField(10, offset + numDown, "Prefix:", "_item", "(optional)");
         add(prefixField);
         numDown += LabeledField.getHEIGHT();
+
         suffixField = new LabeledField(10, offset + numDown, "Suffix:", "item_", "(optional)");
         add(suffixField);
         numDown += LabeledField.getHEIGHT();
         
-        separatorField = new LabeledField(10, offset + numDown, "Separation Marker:", "item1*item2", "(optional default: , )");
+        betweenField = new LabeledField(10, offset + numDown, "Between:", "item_item", "(optional)");
+        add(betweenField);
+        numDown += LabeledField.getHEIGHT();
+
+        separatorField = new LabeledField(10, offset + numDown, "Separation Marker:", "item*item", "(optional default: , )");
         add(separatorField);
         numDown += LabeledField.getHEIGHT();
 
@@ -103,8 +110,6 @@ public class Screen extends JPanel implements ActionListener {
         return formatButton;
     }
 
-    
-
     private JScrollPane initScrollPane(int w, int h) {
         centralTextArea = InitHelper.initTextArea("Paste your items here");
         JScrollPane scrollPane = new JScrollPane(centralTextArea);
@@ -113,14 +118,16 @@ public class Screen extends JPanel implements ActionListener {
         return scrollPane;
     }
 
-
     private void formatText(String inputFile, String outputFile, String separator) {
         try {
             centralTextArea.write(new FileWriter(inputFile, false));
             ArrayList<String> items = Parser.getItems(inputFile, separator);
 
-            Formatter formatter = new Formatter(items, bracketBoolButton.isOn(), spacesBetweenBoolButton.isOn(), removeOutstandingSpacesBoolButton.isOn(),
-                                        InitHelper.getStringContents(prefixField.getTextField()), InitHelper.getStringContents(suffixField.getTextField()));
+            Formatter formatter = new Formatter(items, bracketBoolButton.isOn(), spacesBetweenBoolButton.isOn(), 
+                                        removeOutstandingSpacesBoolButton.isOn(), InitHelper.getStringContents(prefixField.getTextField()),
+                                        InitHelper.getStringContents(suffixField.getTextField()),
+                                        InitHelper.getStringContents(betweenField.getTextField()));
+
             formatter.setModifications();
 
             String outputText = formatter.getFinalOutput();

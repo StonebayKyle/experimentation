@@ -11,6 +11,7 @@ public class Formatter {
 
     private String prefix;
     private String suffix;
+    private String between;
 
 
     private String finalOutput;
@@ -24,10 +25,11 @@ public class Formatter {
 
         prefix = "";
         suffix = "";
+        between = "";
     }
 
     public Formatter(ArrayList<String> items, boolean needBrackets, boolean needSpacesBetween, boolean shouldRemoveOutstandingSpaces,
-                        String prefix, String suffix) {
+                        String prefix, String suffix, String between) {
         this.items = items;
 
         this.needBrackets = needBrackets;
@@ -36,6 +38,7 @@ public class Formatter {
 
         this.prefix = prefix;
         this.suffix = suffix;
+        this.between = between;
     }
 
     public void setModifications() {
@@ -52,12 +55,14 @@ public class Formatter {
         StringBuilder itemBuilder = new StringBuilder(item);
         itemBuilder = modifyStart(itemBuilder);
         
-        String output = itemBuilder.toString();
-        output = modifyEnd(output);
+        item = itemBuilder.toString();
+        item = modifyEnd(item);
 
-        if (needSpacesBetween && i != items.size()-1) output += " ";
+        if (i != items.size()-1) {
+            item = appendBetween(item);
+        }
 
-        return output;
+        return item;
     }
 
     private StringBuilder modifyStart(StringBuilder itemBuilder) {
@@ -70,6 +75,17 @@ public class Formatter {
     private String modifyEnd(String item) {
         if (needBrackets) item += "]";
         item += suffix;
+
+        return item;
+    }
+
+    private String appendBetween(String item) {
+        if (needSpacesBetween && !between.equals("")) {
+            item += " ";
+        }
+        
+        item += between;
+        if (needSpacesBetween) item += " ";
 
         return item;
     }
