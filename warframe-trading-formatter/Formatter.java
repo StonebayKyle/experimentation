@@ -12,6 +12,9 @@ public class Formatter {
     private String prefix;
     private String suffix;
     private String between;
+
+    private String listPrefix;
+    private String listSuffix;
     
     private int characterLimit;
 
@@ -27,11 +30,15 @@ public class Formatter {
         prefix = "";
         suffix = "";
         between = "";
+
+        listPrefix = "";
+        listSuffix = "";
+
         characterLimit = 0;
     }
     
     public Formatter(ArrayList<String> items, boolean needBrackets, boolean needSpacesBetween, boolean shouldRemoveOutstandingSpaces,
-    String prefix, String suffix, String between, int characterLimit) {
+    String prefix, String suffix, String listPrefix, String listSuffix, String between, int characterLimit) {
         this.items = items;
         
         this.needBrackets = needBrackets;
@@ -42,6 +49,11 @@ public class Formatter {
         this.suffix = suffix;
         this.between = between;
 
+        this.listPrefix = listPrefix;
+        this.listSuffix = listSuffix;
+
+        // must subtract limit by everything in concatItems() that wasn't already placed into the items list as one item.
+        // this is done once inside handleCharacterLimit() so items will properly go into overflow due to what should be user error
         this.characterLimit = characterLimit;
     }
     
@@ -65,12 +77,28 @@ public class Formatter {
         }
     }
 
+    // Use when adding a (copy) part to the output.
+    // Does listPrefix, concats, appendsBetween, and listSuffix 
     private String concatItems(ArrayList<String> items) {
-        String output = "";
-        for (int i = 0; i < items.size(); i++) {
+        String output = listPrefix;
+        for (int i = 0; i < items.size(); i++) { // every length increasing action inside of loop must also be accounted for inside of another loop for max characters
             output += items.get(i);
             if (i < items.size()-1) output += appendBetween();
         }
+        output += listSuffix;
+        return output;
+    }
+
+    // gets between String
+    private String appendBetween() {
+        String output = "";
+        if (needSpacesBetween && between.length() > 0) { // spaces will go before and after defined between
+            output += " ";
+        }
+
+        output += between;
+        if (needSpacesBetween) output += " ";
+
         return output;
     }
 
@@ -82,26 +110,42 @@ public class Formatter {
         int copyNumber = 1;
         int charactersThisCopy = 0;
 
+        // must subtract limit by everything in concatItems() that wasn't already placed into the items list as one item.
+        // for things inside of the concatItems() loop, that must be handled inside the loop.
+        System.out.println("Initial limit: " + characterLimit);
+        characterLimit -= listPrefix.length() + listSuffix.length();
+        System.out.println("MODIFIED limit: " + characterLimit);
+
         for (int i = 0; i < items.size(); i++) {
-            
             if (items.get(i).length() > characterLimit) { // overflow
                 overflowItems.add(items.get(i));
             } else {
                 
+                int nextLength = charactersThisCopy + items.get(i).length();
+                System.out.println("nextLength: " + nextLength);
+                if (nextLength > characterLimit // if next word length pushes characters over limit
+                && (output.equals("") || itemsWithinCopies.size() > 0)) { // AND if (this is first run OR there are items ready to be placed)
                     // place and go to next copy
-                if (charactersThisCopy+items.get(i).length() > characterLimit // if next word pushes characters over limit
-                        && (output.equals("") || itemsWithinCopies.size() > 0)) { // AND if (this is first run OR there are items ready to be placed)
-                    
                     output += limitBreakString("  Copy " + copyNumber + "  ", copyNumber == 1);
                     output += concatItems(itemsWithinCopies); // finally add to output before moving on
                     itemsWithinCopies.clear();
                     copyNumber++;
-                    charactersThisCopy = 0;                    
+                    charactersThisCopy = 0;
+                    System.out.println("BREAKER " + copyNumber);
                 }
-                // place in this copy
+                // add to this copy
                 charactersThisCopy += items.get(i).length();
+                if (i < items.size()-1) { // appendBetween() length handling
+                    charactersThisCopy += appendBetween().length();
+                }
                 itemsWithinCopies.add(items.get(i));
+                System.out.println("IN LIST: " + concatItems(itemsWithinCopies));
             }
+        }
+
+        if (itemsWithinCopies.size() > 0) { // place final copy part
+            output += limitBreakString("  Copy " + copyNumber + "  ", copyNumber == 1);
+            output += concatItems(itemsWithinCopies);
         }
 
         if (overflowItems.size() > 0) { // place overflow
@@ -167,18 +211,6 @@ public class Formatter {
         return item;
     }
 
-    // gets between String
-    private String appendBetween() {
-        String output = "";
-        if (needSpacesBetween && between.length() > 0) { // spaces will go before and after defined between
-            output += " ";
-        }
-
-        output += between;
-        if (needSpacesBetween) output += " ";
-
-        return output;
-    }
 
     // Removes (likely accidental) spaces at the beginning and end of an item
     private String removeOutstandingSpaces(String item) {

@@ -19,9 +19,12 @@ public class Screen extends JPanel implements ActionListener {
     private LabeledBoolButton removeOutstandingSpacesBoolButton;
 
     private LabeledField prefixField;
-    private LabeledField betweenField;
     private LabeledField suffixField;
+    private LabeledField betweenField;
     private LabeledField separatorField;
+
+    private LabeledField listPrefixField;
+    private LabeledField listSuffixField;
 
     private CharacterLimitMenu characterLimitMenu;
 
@@ -70,6 +73,8 @@ public class Screen extends JPanel implements ActionListener {
 
         initLeftCol();
 
+        initMiddleCol();
+
         characterLimitMenu = new CharacterLimitMenu(500, 300);
         add(characterLimitMenu);
 
@@ -108,6 +113,14 @@ public class Screen extends JPanel implements ActionListener {
         numDown += LabeledBoolButton.getHEIGHT();
     }
 
+    private void initMiddleCol() {
+        listPrefixField = new LabeledField(prefixField.getX()+prefixField.getWidth(), prefixField.getY(), "List Prefix:", "_list");
+        add(listPrefixField);
+
+        listSuffixField = new LabeledField((suffixField.getX())+suffixField.getWidth(), suffixField.getY(), "List Suffix:", "list_");
+        add(listSuffixField);
+    }
+
     private JScrollPane initScrollPane(int w, int h) {
         centralTextArea = InitHelper.initTextArea("Paste your items here");
         JScrollPane scrollPane = new JScrollPane(centralTextArea);
@@ -123,7 +136,9 @@ public class Screen extends JPanel implements ActionListener {
         Formatter formatter = new Formatter(items, bracketBoolButton.isOn(), spacesBetweenBoolButton.isOn(),
                 removeOutstandingSpacesBoolButton.isOn(), InitHelper.getStringContents(prefixField.getTextField()),
                 InitHelper.getStringContents(suffixField.getTextField()),
-                InitHelper.getStringContents(betweenField.getTextField()), characterLimitMenu.getLimit());
+                InitHelper.getStringContents(listPrefixField.getTextField()), InitHelper.getStringContents(listSuffixField.getTextField()),
+                InitHelper.getStringContents(betweenField.getTextField()), characterLimitMenu.getLimit()
+                );
 
         formatter.setModifications();
 
