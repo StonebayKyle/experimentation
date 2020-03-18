@@ -81,20 +81,20 @@ public class Screen extends JPanel implements ActionListener {
         add(bracketBoolButton);
         numDown += LabeledBoolButton.getHEIGHT();
 
-        prefixField = new LabeledField(10, offset + numDown, "Prefix:", "_item", "(optional)");
+        prefixField = new LabeledField(10, offset + numDown, "Prefix:", "_item");
         add(prefixField);
         numDown += LabeledField.getHEIGHT();
 
-        suffixField = new LabeledField(10, offset + numDown, "Suffix:", "item_", "(optional)");
+        suffixField = new LabeledField(10, offset + numDown, "Suffix:", "item_");
         add(suffixField);
         numDown += LabeledField.getHEIGHT();
 
-        betweenField = new LabeledField(10, offset + numDown, "Between:", "item_item", "(optional)");
+        betweenField = new LabeledField(10, offset + numDown, "Between:", "item_item");
         add(betweenField);
         numDown += LabeledField.getHEIGHT();
 
         separatorField = new LabeledField(10, offset + numDown, "Separation Marker:", "item*item",
-                "(optional default: , )");
+                "(default: , )");
         add(separatorField);
         numDown += LabeledField.getHEIGHT();
 
@@ -103,7 +103,7 @@ public class Screen extends JPanel implements ActionListener {
         add(spacesBetweenBoolButton);
         numDown += LabeledBoolButton.getHEIGHT();
         removeOutstandingSpacesBoolButton = new LabeledBoolButton(10, offset + numDown, "Remove Outstanding Spaces:",
-                true, "ON", "OFF", "(recommended:ON)");
+                true, "ON", "OFF", "(recommended)");
         add(removeOutstandingSpacesBoolButton);
         numDown += LabeledBoolButton.getHEIGHT();
     }
