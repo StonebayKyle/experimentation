@@ -112,9 +112,7 @@ public class Formatter {
 
         // must subtract limit by everything in concatItems() that wasn't already placed into the items list as one item.
         // for things inside of the concatItems() loop, that must be handled inside the loop.
-        System.out.println("Initial limit: " + characterLimit);
         characterLimit -= listPrefix.length() + listSuffix.length();
-        System.out.println("MODIFIED limit: " + characterLimit);
 
         for (int i = 0; i < items.size(); i++) {
             if (items.get(i).length() > characterLimit) { // overflow
@@ -122,7 +120,6 @@ public class Formatter {
             } else {
                 
                 int nextLength = charactersThisCopy + items.get(i).length();
-                System.out.println("nextLength: " + nextLength);
                 if (nextLength > characterLimit // if next word length pushes characters over limit
                 && (output.equals("") || itemsWithinCopies.size() > 0)) { // AND if (this is first run OR there are items ready to be placed)
                     // place and go to next copy
@@ -131,7 +128,6 @@ public class Formatter {
                     itemsWithinCopies.clear();
                     copyNumber++;
                     charactersThisCopy = 0;
-                    System.out.println("BREAKER " + copyNumber);
                 }
                 // add to this copy
                 charactersThisCopy += items.get(i).length();
@@ -139,7 +135,6 @@ public class Formatter {
                     charactersThisCopy += appendBetween().length();
                 }
                 itemsWithinCopies.add(items.get(i));
-                System.out.println("IN LIST: " + concatItems(itemsWithinCopies));
             }
         }
 
