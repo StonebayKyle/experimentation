@@ -3,7 +3,6 @@ import javax.swing.*;
 import java.awt.event.*;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
-import java.io.IOException;
 import java.util.ArrayList;
 
 public class Screen extends JPanel implements ActionListener {
@@ -23,6 +22,8 @@ public class Screen extends JPanel implements ActionListener {
     private LabeledField betweenField;
     private LabeledField suffixField;
     private LabeledField separatorField;
+
+    private CharacterLimitMenu characterLimitMenu;
 
     private static final int WIDTH_DEFAULT = 800;
     private static final int HEIGHT_DEFAULT = 800;
@@ -58,15 +59,18 @@ public class Screen extends JPanel implements ActionListener {
         setLayout(null);
         setSize(width, height);
 
-        JButton formatButton = initFormatButton(100, 40);
+        JButton formatButton = InitHelper.initButton(width / 2 - 50, 20, 100, 40, "Format!", "format", this);
         add(formatButton);
+
+        JButton undoButton = InitHelper.initButton(500, 30, 75, 30, "Undo", "undo", this);
+        add(undoButton);
 
         JScrollPane scrollPane = initScrollPane(500, 200);
         add(scrollPane);
 
         initLeftCol();
 
-        CharacterLimitMenu characterLimitMenu = new CharacterLimitMenu(500, 300);
+        characterLimitMenu = new CharacterLimitMenu(500, 300);
         add(characterLimitMenu);
 
     }
@@ -77,7 +81,6 @@ public class Screen extends JPanel implements ActionListener {
         add(bracketBoolButton);
         numDown += LabeledBoolButton.getHEIGHT();
 
-
         prefixField = new LabeledField(10, offset + numDown, "Prefix:", "_item", "(optional)");
         add(prefixField);
         numDown += LabeledField.getHEIGHT();
@@ -85,59 +88,75 @@ public class Screen extends JPanel implements ActionListener {
         suffixField = new LabeledField(10, offset + numDown, "Suffix:", "item_", "(optional)");
         add(suffixField);
         numDown += LabeledField.getHEIGHT();
-        
+
         betweenField = new LabeledField(10, offset + numDown, "Between:", "item_item", "(optional)");
         add(betweenField);
         numDown += LabeledField.getHEIGHT();
 
-        separatorField = new LabeledField(10, offset + numDown, "Separation Marker:", "item*item", "(optional default: , )");
+        separatorField = new LabeledField(10, offset + numDown, "Separation Marker:", "item*item",
+                "(optional default: , )");
         add(separatorField);
         numDown += LabeledField.getHEIGHT();
 
-        spacesBetweenBoolButton = new LabeledBoolButton(10, offset + numDown, "Put Spaces Between Items: ", false, "ON", "OFF");
+        spacesBetweenBoolButton = new LabeledBoolButton(10, offset + numDown, "Put Spaces Between Items: ", false, "ON",
+                "OFF");
         add(spacesBetweenBoolButton);
         numDown += LabeledBoolButton.getHEIGHT();
-        removeOutstandingSpacesBoolButton = new LabeledBoolButton(10, offset + numDown, "Remove Outstanding Spaces:", true, "ON", "OFF", "(recommended:ON)");
+        removeOutstandingSpacesBoolButton = new LabeledBoolButton(10, offset + numDown, "Remove Outstanding Spaces:",
+                true, "ON", "OFF", "(recommended:ON)");
         add(removeOutstandingSpacesBoolButton);
         numDown += LabeledBoolButton.getHEIGHT();
-    }
-
-    private JButton initFormatButton(int w, int h) {
-        JButton formatButton = new JButton("Format!");
-        formatButton.setActionCommand("format");
-        formatButton.addActionListener(this);
-        formatButton.setBounds(width / 2 - (int) (w * .5), 10, w, h); // centered horizontally
-        return formatButton;
     }
 
     private JScrollPane initScrollPane(int w, int h) {
         centralTextArea = InitHelper.initTextArea("Paste your items here");
         JScrollPane scrollPane = new JScrollPane(centralTextArea);
         scrollPane.setBounds(width / 2 - (int) (w * .5), 80, w, h);
-        
+
         return scrollPane;
     }
 
-    private void formatText(String inputFile, String outputFile, String separator) {
+    private void formatText(String inputFile, String outputFile, String separator) throws Exception {
+        centralTextArea.write(new FileWriter(inputFile, false));
+        ArrayList<String> items = Parser.getItems(inputFile, separator);
+
+        Formatter formatter = new Formatter(items, bracketBoolButton.isOn(), spacesBetweenBoolButton.isOn(),
+                removeOutstandingSpacesBoolButton.isOn(), InitHelper.getStringContents(prefixField.getTextField()),
+                InitHelper.getStringContents(suffixField.getTextField()),
+                InitHelper.getStringContents(betweenField.getTextField()), characterLimitMenu.getLimit());
+
+        formatter.setModifications();
+
+        String outputText = formatter.getFinalOutput();
+        centralTextArea.setText(outputText);
+
+        BufferedWriter out = new BufferedWriter(new FileWriter(outputFile));
+        out.write(outputText);
+        out.close();
+    }
+
+    /// currently commented because it would require a lot of special checks and may end up hindering the user.
+    // makes sure there is a change between inputs before allowing a format
+    // private boolean isDifferentFormat(String outputFile) throws Exception {
+
+    //     String currentText = centralTextArea.getText();
+    //     currentText = currentText.replace("\n", "");
+
+    //     String prevOutput = Parser.getRawString(outputFile);
+    //     if (prevOutput.equals(currentText)) {
+    //             System.out.println("Duplicate Format!");
+    //             return false;
+    //     }
+
+    //     return true;
+    // }
+
+    private void undoFormat() {
         try {
-            centralTextArea.write(new FileWriter(inputFile, false));
-            ArrayList<String> items = Parser.getItems(inputFile, separator);
-
-            Formatter formatter = new Formatter(items, bracketBoolButton.isOn(), spacesBetweenBoolButton.isOn(), 
-                                        removeOutstandingSpacesBoolButton.isOn(), InitHelper.getStringContents(prefixField.getTextField()),
-                                        InitHelper.getStringContents(suffixField.getTextField()),
-                                        InitHelper.getStringContents(betweenField.getTextField()));
-
-            formatter.setModifications();
-
-            String outputText = formatter.getFinalOutput();
-            centralTextArea.setText(outputText);
-
-            BufferedWriter out = new BufferedWriter(new FileWriter(outputFile));
-            out.write(outputText);
-            out.close();
-
-        } catch (IOException e) {
+            centralTextArea.setText(Parser.getRawString("input.txt"));
+        } catch (Exception e) {
+            centralTextArea.setText("Undo failed: input.txt not found");
+            centralTextArea.getFont().deriveFont(2);
             e.printStackTrace();
         }
     }
@@ -145,10 +164,17 @@ public class Screen extends JPanel implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         if ("format".equals(e.getActionCommand())) {
-            if (centralTextArea.getFont().getStyle() == 0) formatText("input.txt", "output.txt",
-                                                            InitHelper.getStringContents(separatorField.getTextField(), ","));
-        } else {
-            System.out.println("Unknown Action!");
+            if (centralTextArea.getFont().getStyle() == 0) {
+                try {
+                    formatText("input.txt", "output.txt",
+                            InitHelper.getStringContents(separatorField.getTextField(), ","));
+                } catch (Exception e1) {
+                    e1.printStackTrace();
+                }
+            } 
+                                                            
+        } else if ("undo".equals(e.getActionCommand())) {
+            undoFormat();
         }
     }
 

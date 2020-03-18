@@ -1,4 +1,5 @@
 
+import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
@@ -15,6 +16,14 @@ public class InitHelper {
         label.setBounds(x, y, labelText.length()*7, 25);
         
         return label;
+    }
+
+    public static JButton initButton(int x, int y, int w, int h, String buttonText, String actionCommand, ActionListener listener) {
+        JButton button = new JButton(buttonText);
+        button.setActionCommand(actionCommand);
+        button.addActionListener(listener);
+        button.setBounds(x, y, w, h);
+        return button;
     }
 
     public static JTextField initTextField(int x, int y, int w, int h, String defaultText) {
