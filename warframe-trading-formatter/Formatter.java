@@ -178,7 +178,7 @@ public class Formatter {
     
     private String getModifiedString(String item, int i) {
         if (shouldRemoveOutstandingSpaces) {
-            item = removeOutstandingSpaces(item);
+            item = item.trim();
         }
 
         if (item.length() == 0) { return null; } // don't format empty items
@@ -203,21 +203,6 @@ public class Formatter {
         if (needBrackets) item += "]";
         item += suffix;
 
-        return item;
-    }
-
-
-    // Removes (likely accidental) spaces at the beginning and end of an item
-    private String removeOutstandingSpaces(String item) {
-        // check is required in while loop because the size is changing dynamically and may go under length of 1.
-        // from front
-        while (item.length() > 0 && item.substring(0,1).equals(" ")) { 
-            item = item.substring(1,item.length());
-        }
-        // from back
-        while (item.length() > 0 && item.substring(item.length()-1, item.length()).equals(" ")) {
-            item = item.substring(0, item.length()-2);
-        }
         return item;
     }
     
