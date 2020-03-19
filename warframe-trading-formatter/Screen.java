@@ -196,12 +196,10 @@ public class Screen extends JPanel implements ActionListener {
         }
     }
 
-    
-    
     private void newPreferences() {
         try {
             FileOutputStream out = new FileOutputStream("config.properties");
-            setDefaultProperties();
+            prop = defaultProperties();
             prop.store(out, "Default User Preferences");
             out.close();
         } catch (IOException e) {
@@ -241,16 +239,17 @@ public class Screen extends JPanel implements ActionListener {
     }
     
     private void updateStringProperties() {
-        prop.setProperty("itemPrefix", prefixField.getTextField().getText());
-        prop.setProperty("itemSuffix", suffixField.getTextField().getText());
-        prop.setProperty("listPrefix", listPrefixField.getTextField().getText());
-        prop.setProperty("listSuffix", listSuffixField.getTextField().getText());
+        prop.setProperty("itemPrefix", InitHelper.getStringContents(prefixField.getTextField()));
+        prop.setProperty("itemSuffix", InitHelper.getStringContents(suffixField.getTextField()));
+        prop.setProperty("listPrefix", InitHelper.getStringContents(listPrefixField.getTextField()));
+        prop.setProperty("listSuffix", InitHelper.getStringContents(listSuffixField.getTextField()));
         
-        prop.setProperty("betweenItems", betweenField.getTextField().getText());
-        prop.setProperty("separator", separatorField.getTextField().getText());
+        prop.setProperty("betweenItems", InitHelper.getStringContents(betweenField.getTextField()));
+        prop.setProperty("separator", InitHelper.getStringContents(separatorField.getTextField(), ","));
     }
 
-    private void setDefaultProperties() {
+    private Properties defaultProperties() {
+        Properties prop = new Properties();
         prop.setProperty("brackets", "true");
         prop.setProperty("spacesBetween", "false");
         prop.setProperty("removeOutstandingSpaces", "true");
@@ -265,12 +264,14 @@ public class Screen extends JPanel implements ActionListener {
         
         prop.setProperty("betweenItems", "");
         prop.setProperty("separator", ",");
+
+        return prop;
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
         if ("format".equals(e.getActionCommand())) {
-            if (centralTextArea.getFont().getStyle() == 0) {
+            if (!InitHelper.textIsDefault(centralTextArea)) {
                 try {
                     formatText("input.txt", "output.txt",
                             InitHelper.getStringContents(separatorField.getTextField(), ","));

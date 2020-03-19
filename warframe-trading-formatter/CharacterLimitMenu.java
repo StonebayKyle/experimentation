@@ -84,7 +84,7 @@ public class CharacterLimitMenu extends JPanel implements ActionListener {
 
             @Override
             public void focusGained(FocusEvent e) {
-                if (textField.getFont().getStyle() == 2) {
+                if (InitHelper.textIsDefault(textField)) {
                     textField.setFont(textField.getFont().deriveFont(0));
                     textField.setText("");
                 }

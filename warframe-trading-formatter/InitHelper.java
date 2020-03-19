@@ -55,7 +55,7 @@ public class InitHelper {
         textComponent.addFocusListener(new FocusListener() {
             @Override
 			public void focusGained(FocusEvent e) {
-                if (textComponent.getFont().getStyle() == 2) {
+                if (textIsDefault(textComponent)) {
                     textComponent.setFont(textComponent.getFont().deriveFont(0));
                     textComponent.setText("");
                 }
@@ -73,12 +73,16 @@ public class InitHelper {
     }
 
     public static String getStringContents(JTextComponent textComponent, String defaultString) {
-        if (textComponent.getFont().getStyle() == 2 || textComponent.getText().equals("")) { return defaultString; }
+        if (textIsDefault(textComponent) || textComponent.getText().equals("")) { return defaultString; }
         return textComponent.getText();
     }
 
     public static String getStringContents(JTextComponent textComponent) {
         return getStringContents(textComponent, "");
+    }
+
+    public static boolean textIsDefault(JTextComponent textComponent) {
+        return textComponent.getFont().getStyle() == 2;
     }
 
 }
