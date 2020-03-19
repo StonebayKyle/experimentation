@@ -70,6 +70,7 @@ public class Formatter {
             
             if (modifiedString == null) { 
                 items.remove(i); // remove empty Strings
+                i--; // don't skip index after because of the .remove() frameshift.
             } else {
                 items.set(i, modifiedString);
             }
