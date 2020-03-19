@@ -18,7 +18,7 @@ public class CharacterLimitMenu extends JPanel implements ActionListener {
     private JTextField customTextField;
 
     public CharacterLimitMenu(int x, int y) {
-        setBounds(x, y, 400, 400);
+        setBounds(x, y, 245, 150); // 185 y bound with JFrame
         setLayout(null);
 
         limit = 0;
@@ -182,7 +182,7 @@ public class CharacterLimitMenu extends JPanel implements ActionListener {
         CharacterLimitMenu characterLimitMenu = new CharacterLimitMenu(500, 300);
         JFrame frame = new JFrame("CharacterLimitMenu Test");
         frame.add(characterLimitMenu);
-        frame.setSize(characterLimitMenu.getWidth(), characterLimitMenu.getHeight());
+        frame.setSize(characterLimitMenu.getWidth(), characterLimitMenu.getHeight()+35);
 
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setResizable(false);

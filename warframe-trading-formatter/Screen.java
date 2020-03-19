@@ -33,6 +33,7 @@ public class Screen extends JPanel implements ActionListener {
     private LabeledField listSuffixField;
 
     private CharacterLimitMenu characterLimitMenu;
+    private SortMenu sortMenu;
 
     private static final int WIDTH_DEFAULT = 800;
     private static final int HEIGHT_DEFAULT = 800;
@@ -84,8 +85,11 @@ public class Screen extends JPanel implements ActionListener {
 
         initMiddleCol();
 
-        characterLimitMenu = new CharacterLimitMenu(500, 300);
+        characterLimitMenu = new CharacterLimitMenu(475, 300);
         add(characterLimitMenu);
+
+        sortMenu = new SortMenu(400, 455);
+        add(sortMenu);
 
     }
 
