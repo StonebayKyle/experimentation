@@ -45,9 +45,6 @@ public class SortMenu extends JPanel implements ActionListener {
         add(randomSortingButton);
         x += randomSortingButton.getWidth() + spacer;
 
-
-
-
         valuedButtons = new ValuedToggleButton[4];
         valuedButtons[0] = noSortingButton;
         valuedButtons[1] = azSortingButton;

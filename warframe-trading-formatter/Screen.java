@@ -2,11 +2,8 @@ import javax.swing.*;
 
 import java.awt.event.*;
 import java.io.BufferedWriter;
-import java.io.FileOutputStream;
 import java.io.FileWriter;
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Properties;
 
 public class Screen extends JPanel implements ActionListener {
 
@@ -154,7 +151,7 @@ public class Screen extends JPanel implements ActionListener {
                 InitHelper.getStringContents(suffixField.getTextField()),
                 InitHelper.getStringContents(listPrefixField.getTextField()),
                 InitHelper.getStringContents(listSuffixField.getTextField()),
-                InitHelper.getStringContents(betweenField.getTextField()), characterLimitMenu.getLimit());
+                InitHelper.getStringContents(betweenField.getTextField()), sortMenu.getSortID(), characterLimitMenu.getLimit());
 
         formatter.setModifications();
 
