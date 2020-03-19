@@ -14,6 +14,9 @@ public class Screen extends JPanel implements ActionListener {
 
     private JTextArea centralTextArea;
 
+    private ArrayList<String> inputHistory;
+    private JButton undoButton;
+
     private LabeledBoolButton bracketBoolButton;
     private LabeledBoolButton spacesBetweenBoolButton;
     private LabeledBoolButton removeOutstandingSpacesBoolButton;
@@ -62,10 +65,13 @@ public class Screen extends JPanel implements ActionListener {
         setLayout(null);
         setSize(width, height);
 
+        inputHistory = new ArrayList<>();
+
         JButton formatButton = InitHelper.initButton(width / 2 - 50, 20, 100, 40, "Format!", "format", this);
         add(formatButton);
 
-        JButton undoButton = InitHelper.initButton(500, 30, 75, 30, "Undo", "undo", this);
+        undoButton = InitHelper.initButton(500, 30, 75, 30, "Undo", "undo", this);
+        undoButton.setEnabled(false);
         add(undoButton);
 
         JScrollPane scrollPane = initScrollPane(500, 200);
@@ -130,8 +136,11 @@ public class Screen extends JPanel implements ActionListener {
     }
 
     private void formatText(String inputFile, String outputFile, String separator) throws Exception {
+        buildInputHistory();
         centralTextArea.write(new FileWriter(inputFile, false));
+
         ArrayList<String> items = Parser.getItems(inputFile, separator);
+
 
         Formatter formatter = new Formatter(items, bracketBoolButton.isOn(), spacesBetweenBoolButton.isOn(),
                 removeOutstandingSpacesBoolButton.isOn(), InitHelper.getStringContents(prefixField.getTextField()),
@@ -150,29 +159,26 @@ public class Screen extends JPanel implements ActionListener {
         out.close();
     }
 
-    /// currently commented because it would require a lot of special checks and may end up hindering the user.
-    // makes sure there is a change between inputs before allowing a format
-    // private boolean isDifferentFormat(String outputFile) throws Exception {
+    // save and upkeep history for undoing
+    private void buildInputHistory() {
+        inputHistory.add(centralTextArea.getText());
+        undoButton.setEnabled(true);
 
-    //     String currentText = centralTextArea.getText();
-    //     currentText = currentText.replace("\n", "");
-
-    //     String prevOutput = Parser.getRawString(outputFile);
-    //     if (prevOutput.equals(currentText)) {
-    //             System.out.println("Duplicate Format!");
-    //             return false;
-    //     }
-
-    //     return true;
-    // }
+        int maxHistorySize = 20;
+        if (inputHistory.size() > maxHistorySize) {
+            inputHistory.remove(0);
+        }
+    }
 
     private void undoFormat() {
-        try {
-            centralTextArea.setText(Parser.getRawString("input.txt"));
-        } catch (Exception e) {
-            centralTextArea.setText("Undo failed: input.txt not found");
-            centralTextArea.getFont().deriveFont(2);
-            e.printStackTrace();
+        if (inputHistory.size() > 0) {
+            int latestIndex = inputHistory.size()-1;
+            centralTextArea.setText(inputHistory.get(latestIndex));
+            inputHistory.remove(latestIndex);
+        }
+
+        if (inputHistory.size() == 0) {
+            undoButton.setEnabled(false);
         }
     }
 
