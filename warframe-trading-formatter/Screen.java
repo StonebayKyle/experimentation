@@ -2,8 +2,11 @@ import javax.swing.*;
 
 import java.awt.event.*;
 import java.io.BufferedWriter;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Properties;
 
 public class Screen extends JPanel implements ActionListener {
 
@@ -16,6 +19,8 @@ public class Screen extends JPanel implements ActionListener {
 
     private ArrayList<String> inputHistory;
     private JButton undoButton;
+
+    Properties prop;
 
     private LabeledBoolButton bracketBoolButton;
     private LabeledBoolButton spacesBetweenBoolButton;
@@ -66,6 +71,15 @@ public class Screen extends JPanel implements ActionListener {
         setSize(width, height);
 
         inputHistory = new ArrayList<>();
+        prop = new Properties();
+
+        JButton newPropertiesButton = InitHelper.initButton(5, 5, 140, 30, "New Preference File", "newPreferences", this);
+        newPropertiesButton.setFont(newPropertiesButton.getFont().deriveFont(10f));
+        add(newPropertiesButton);
+
+        JButton savePreferencesButton = InitHelper.initButton(5, 45, 140, 30, "Save Preferences", "savePreferences", this);
+        savePreferencesButton.setFont(savePreferencesButton.getFont().deriveFont(12f));
+        add(savePreferencesButton);
 
         JButton formatButton = InitHelper.initButton(width / 2 - 50, 20, 100, 40, "Format!", "format", this);
         add(formatButton);
@@ -104,8 +118,7 @@ public class Screen extends JPanel implements ActionListener {
         add(betweenField);
         numDown += LabeledField.getHEIGHT();
 
-        separatorField = new LabeledField(10, offset + numDown, "Separation Marker:", "item*item",
-                "(default: , )");
+        separatorField = new LabeledField(10, offset + numDown, "Separation Marker:", "item*item", "(default: , )");
         add(separatorField);
         numDown += LabeledField.getHEIGHT();
 
@@ -120,10 +133,12 @@ public class Screen extends JPanel implements ActionListener {
     }
 
     private void initMiddleCol() {
-        listPrefixField = new LabeledField(prefixField.getX()+prefixField.getWidth(), prefixField.getY(), "List Prefix:", "_list");
+        listPrefixField = new LabeledField(prefixField.getX() + prefixField.getWidth(), prefixField.getY(),
+                "List Prefix:", "_list");
         add(listPrefixField);
 
-        listSuffixField = new LabeledField((suffixField.getX())+suffixField.getWidth(), suffixField.getY(), "List Suffix:", "list_");
+        listSuffixField = new LabeledField((suffixField.getX()) + suffixField.getWidth(), suffixField.getY(),
+                "List Suffix:", "list_");
         add(listSuffixField);
     }
 
@@ -141,13 +156,12 @@ public class Screen extends JPanel implements ActionListener {
 
         ArrayList<String> items = Parser.getItems(inputFile, separator);
 
-
         Formatter formatter = new Formatter(items, bracketBoolButton.isOn(), spacesBetweenBoolButton.isOn(),
                 removeOutstandingSpacesBoolButton.isOn(), InitHelper.getStringContents(prefixField.getTextField()),
                 InitHelper.getStringContents(suffixField.getTextField()),
-                InitHelper.getStringContents(listPrefixField.getTextField()), InitHelper.getStringContents(listSuffixField.getTextField()),
-                InitHelper.getStringContents(betweenField.getTextField()), characterLimitMenu.getLimit()
-                );
+                InitHelper.getStringContents(listPrefixField.getTextField()),
+                InitHelper.getStringContents(listSuffixField.getTextField()),
+                InitHelper.getStringContents(betweenField.getTextField()), characterLimitMenu.getLimit());
 
         formatter.setModifications();
 
@@ -172,7 +186,7 @@ public class Screen extends JPanel implements ActionListener {
 
     private void undoFormat() {
         if (inputHistory.size() > 0) {
-            int latestIndex = inputHistory.size()-1;
+            int latestIndex = inputHistory.size() - 1;
             centralTextArea.setText(inputHistory.get(latestIndex));
             inputHistory.remove(latestIndex);
         }
@@ -180,6 +194,77 @@ public class Screen extends JPanel implements ActionListener {
         if (inputHistory.size() == 0) {
             undoButton.setEnabled(false);
         }
+    }
+
+    
+    
+    private void newPreferences() {
+        try {
+            FileOutputStream out = new FileOutputStream("config.properties");
+            setDefaultProperties();
+            prop.store(out, "Default User Preferences");
+            out.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } 
+    }
+    
+    private void savePreferences() {
+        try {
+            FileOutputStream out = new FileOutputStream("config.properties");
+            updateProperties();
+            prop.store(out, "User Preferences");
+            out.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void updateProperties() {
+        updateBoolProperties();
+        updateIntProperties();
+        updateStringProperties();
+    }
+
+    private void updateBoolProperties() {
+        String boolString = bracketBoolButton.isOn() ? "true" : "false";
+        prop.setProperty("brackets", boolString);
+        boolString = spacesBetweenBoolButton.isOn() ? "true" : "false";
+        prop.setProperty("spacesBetween", boolString);
+        boolString = removeOutstandingSpacesBoolButton.isOn() ? "true": "false";
+        prop.setProperty("removeOutstandingSpaces", boolString);
+    }
+
+    private void updateIntProperties() {
+        prop.setProperty("maxChars", String.valueOf(characterLimitMenu.getLimit()));
+        prop.setProperty("customMax", String.valueOf(characterLimitMenu.getCustomLimit()));
+    }
+    
+    private void updateStringProperties() {
+        prop.setProperty("itemPrefix", prefixField.getTextField().getText());
+        prop.setProperty("itemSuffix", suffixField.getTextField().getText());
+        prop.setProperty("listPrefix", listPrefixField.getTextField().getText());
+        prop.setProperty("listSuffix", listSuffixField.getTextField().getText());
+        
+        prop.setProperty("betweenItems", betweenField.getTextField().getText());
+        prop.setProperty("separator", separatorField.getTextField().getText());
+    }
+
+    private void setDefaultProperties() {
+        prop.setProperty("brackets", "true");
+        prop.setProperty("spacesBetween", "false");
+        prop.setProperty("removeOutstandingSpaces", "true");
+
+        prop.setProperty("maxChars", "0");
+        prop.setProperty("customMax", "0");
+        
+        prop.setProperty("itemPrefix", "");
+        prop.setProperty("itemSuffix", "");
+        prop.setProperty("listPrefix", "");
+        prop.setProperty("listSuffix", "");
+        
+        prop.setProperty("betweenItems", "");
+        prop.setProperty("separator", ",");
     }
 
     @Override
@@ -196,6 +281,12 @@ public class Screen extends JPanel implements ActionListener {
                                                             
         } else if ("undo".equals(e.getActionCommand())) {
             undoFormat();
+        } else if ("newPreferences".equals(e.getActionCommand())) {
+            newPreferences();
+        } else if ("savePreferences".equals(e.getActionCommand())) {
+            savePreferences();
+        } else {
+            System.out.println("Unknown Action!");
         }
     }
 

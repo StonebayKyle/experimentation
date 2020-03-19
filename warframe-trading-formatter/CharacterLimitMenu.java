@@ -169,10 +169,13 @@ public class CharacterLimitMenu extends JPanel implements ActionListener {
         }
     }
 
-
     public int getLimit() {
         if (limit <= 0) return 0; // 0 represents no limit
         return limit;
+    }
+
+    public int getCustomLimit() {
+        return valuedButtons[4].getValue();
     }
     
     public static void main(String[] args) {
