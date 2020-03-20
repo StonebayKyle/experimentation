@@ -158,19 +158,6 @@ public class CharacterLimitMenu extends JPanel implements ActionListener {
             }
         }
     }
-    
-    private void updateActive() {
-        boolean foundMatching = false; // ensures no duplicate matching (specifically when custom has the same value as a preset).
-        for (int i = 0; i < valuedButtons.length; i++) {
-            if (valuedButtons[i].getValue() == limit && !foundMatching) {
-                valuedButtons[i].setSelected(true);
-                foundMatching = true;
-            } else {
-                valuedButtons[i].setSelected(false);
-            }
-        }
-        updateLimitLabel();
-    }
 
     // sets custom buttom value to whatever is in the field.
     // if value is malformed, due to letters or is blank, sets value to 0 (no limit).
@@ -187,26 +174,8 @@ public class CharacterLimitMenu extends JPanel implements ActionListener {
         return limit;
     }
 
-    public void setLimit(int limit) {
-        if (limit <= 0)  {
-            this.limit = 0;
-        } else {
-            this.limit = limit;
-        }
-        updateActive();
-    }
-
     public int getCustomLimit() {
         return valuedButtons[4].getValue();
-    }
-
-    public void setCustomLimit(int limit) {
-        if (limit <= 0)  {
-            valuedButtons[4].setValue(0);
-        } else {
-            valuedButtons[4].setValue(limit);
-        }
-        customTextField.setText(String.valueOf(valuedButtons[4].getValue()));
     }
     
     public static void main(String[] args) {

@@ -40,7 +40,6 @@ public class LabeledBoolButton extends JPanel implements ActionListener {
     }
 
     public boolean isOn() { return boolButton.isOn(); }
-    public void setOn(boolean isOn) { boolButton.setOn(isOn); }
 
     @Override
     public void actionPerformed(ActionEvent e) {

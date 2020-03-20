@@ -14,7 +14,7 @@ public class BoolButton extends JToggleButton implements ActionListener {
         this.onText = onText;
         this.offText = offText;
 
-        update();
+        updateText();
         setSelected(isOn);
         addActionListener(this);
 
@@ -24,13 +24,12 @@ public class BoolButton extends JToggleButton implements ActionListener {
 
     private void toggle() {
         isOn = !isOn;
-        update();
+        updateText();
     }
 
-    private void update() {
+    private void updateText() {
         String text = isOn ? onText : offText;
         setText(text);
-        setSelected(isOn);
     }
 
     @Override
@@ -39,10 +38,5 @@ public class BoolButton extends JToggleButton implements ActionListener {
     }
 
     public boolean isOn() { return isOn; }
-
-    public void setOn(boolean isOn) { 
-        this.isOn = isOn; 
-        update();
-    }
     
 }

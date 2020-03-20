@@ -20,8 +20,6 @@ public class Screen extends JPanel implements ActionListener {
     private ArrayList<String> inputHistory;
     private JButton undoButton;
 
-    Properties prop;
-
     private LabeledBoolButton bracketBoolButton;
     private LabeledBoolButton spacesBetweenBoolButton;
     private LabeledBoolButton removeOutstandingSpacesBoolButton;
@@ -71,19 +69,6 @@ public class Screen extends JPanel implements ActionListener {
         setSize(width, height);
 
         inputHistory = new ArrayList<>();
-        prop = new Properties();
-        
-        JButton savePreferencesButton = InitHelper.initButton(5, 5, 135, 30, "Save Preferences", "savePreferences", this);
-        savePreferencesButton.setFont(savePreferencesButton.getFont().deriveFont(11f));
-        add(savePreferencesButton);
-        
-        JButton newPropertiesButton = InitHelper.initButton(5, 40, 135, 30, "Reset Preferences", "newPreferences", this);
-        newPropertiesButton.setFont(newPropertiesButton.getFont().deriveFont(10f));
-        add(newPropertiesButton);
-
-        JButton loadPreferencesButton = InitHelper.initButton(145, 5, 135, 30, "Load Preferences", "loadPreferences", this);
-        loadPreferencesButton.setFont(loadPreferencesButton.getFont().deriveFont(11f));
-        add(loadPreferencesButton);
 
         JButton formatButton = InitHelper.initButton(width / 2 - 50, 20, 100, 40, "Format!", "format", this);
         add(formatButton);
@@ -200,106 +185,6 @@ public class Screen extends JPanel implements ActionListener {
         }
     }
 
-    private void newPreferences() {
-        try {
-            FileOutputStream out = new FileOutputStream("config.properties");
-            prop = defaultProperties();
-            prop.store(out, "Default User Preferences");
-            out.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } 
-    }
-    
-    private void savePreferences() {
-        try {
-            FileOutputStream out = new FileOutputStream("config.properties");
-            updateProperties();
-            prop.store(out, "User Preferences");
-            out.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void updateProperties() {
-        updateBoolProperties();
-        updateIntProperties();
-        updateStringProperties();
-    }
-
-    private void updateBoolProperties() {
-        String boolString = bracketBoolButton.isOn() ? "true" : "false";
-        prop.setProperty("brackets", boolString);
-        boolString = spacesBetweenBoolButton.isOn() ? "true" : "false";
-        prop.setProperty("spacesBetween", boolString);
-        boolString = removeOutstandingSpacesBoolButton.isOn() ? "true": "false";
-        prop.setProperty("removeOutstandingSpaces", boolString);
-    }
-
-    private void updateIntProperties() {
-        prop.setProperty("maxChars", String.valueOf(characterLimitMenu.getLimit()));
-        prop.setProperty("customMax", String.valueOf(characterLimitMenu.getCustomLimit()));
-    }
-    
-    private void updateStringProperties() {
-        prop.setProperty("itemPrefix", InitHelper.getStringContents(prefixField.getTextField()));
-        prop.setProperty("itemSuffix", InitHelper.getStringContents(suffixField.getTextField()));
-        prop.setProperty("listPrefix", InitHelper.getStringContents(listPrefixField.getTextField()));
-        prop.setProperty("listSuffix", InitHelper.getStringContents(listSuffixField.getTextField()));
-        
-        prop.setProperty("betweenItems", InitHelper.getStringContents(betweenField.getTextField()));
-        prop.setProperty("separator", InitHelper.getStringContents(separatorField.getTextField(), ","));
-    }
-
-    private void loadPreferences() {
-        loadBoolProperties();
-        // loadIntProperties();
-        loadStringProperties();
-    }
-
-    private void loadBoolProperties() {
-        bracketBoolButton.setOn(Boolean.parseBoolean(prop.getProperty("brackets")));
-        spacesBetweenBoolButton.setOn(Boolean.parseBoolean(prop.getProperty("spacesBetween")));
-        removeOutstandingSpacesBoolButton.setOn(Boolean.parseBoolean(prop.getProperty("removeOutstandingSpaces")));
-    }
-
-    private void loadIntProperties() {
-        characterLimitMenu.setLimit(Integer.parseInt(prop.getProperty("maxChars")));
-        characterLimitMenu.setCustomLimit(Integer.parseInt(prop.getProperty("customMax")));
-    }
-
-    private void loadStringProperties() {
-        prefixField.getTextField().setText(prop.getProperty("itemPrefix"));
-        suffixField.getTextField().setText(prop.getProperty("itemSuffix"));
-
-        listPrefixField.getTextField().setText(prop.getProperty("listPrefix"));
-        listSuffixField.getTextField().setText(prop.getProperty("listSuffix"));
-
-        betweenField.getTextField().setText(prop.getProperty("betweenItems"));
-        separatorField.getTextField().setText(prop.getProperty("separator"));
-    }
-
-    private static Properties defaultProperties() {
-        Properties prop = new Properties();
-        prop.setProperty("brackets", "true");
-        prop.setProperty("spacesBetween", "false");
-        prop.setProperty("removeOutstandingSpaces", "true");
-
-        prop.setProperty("maxChars", "0");
-        prop.setProperty("customMax", "0");
-        
-        prop.setProperty("itemPrefix", "");
-        prop.setProperty("itemSuffix", "");
-        prop.setProperty("listPrefix", "");
-        prop.setProperty("listSuffix", "");
-        
-        prop.setProperty("betweenItems", "");
-        prop.setProperty("separator", ",");
-
-        return prop;
-    }
-
     @Override
     public void actionPerformed(ActionEvent e) {
         if ("format".equals(e.getActionCommand())) {
@@ -310,16 +195,10 @@ public class Screen extends JPanel implements ActionListener {
                 } catch (Exception e1) {
                     e1.printStackTrace();
                 }
-            } 
-                                                            
+            }
+                                          
         } else if ("undo".equals(e.getActionCommand())) {
             undoFormat();
-        } else if ("newPreferences".equals(e.getActionCommand())) {
-            newPreferences();
-        } else if ("savePreferences".equals(e.getActionCommand())) {
-            savePreferences();
-        } else if ("loadPreferences".equals(e.getActionCommand())) {
-            loadPreferences();
         } else {
             System.out.println("Unknown Action!");
         }
