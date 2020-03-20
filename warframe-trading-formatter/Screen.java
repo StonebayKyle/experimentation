@@ -72,14 +72,18 @@ public class Screen extends JPanel implements ActionListener {
 
         inputHistory = new ArrayList<>();
         prop = new Properties();
-
-        JButton newPropertiesButton = InitHelper.initButton(5, 5, 140, 30, "New Preference File", "newPreferences", this);
+        
+        JButton savePreferencesButton = InitHelper.initButton(5, 5, 135, 30, "Save Preferences", "savePreferences", this);
+        savePreferencesButton.setFont(savePreferencesButton.getFont().deriveFont(11f));
+        add(savePreferencesButton);
+        
+        JButton newPropertiesButton = InitHelper.initButton(5, 40, 135, 30, "Reset Preferences", "newPreferences", this);
         newPropertiesButton.setFont(newPropertiesButton.getFont().deriveFont(10f));
         add(newPropertiesButton);
 
-        JButton savePreferencesButton = InitHelper.initButton(5, 45, 140, 30, "Save Preferences", "savePreferences", this);
-        savePreferencesButton.setFont(savePreferencesButton.getFont().deriveFont(12f));
-        add(savePreferencesButton);
+        JButton loadPreferencesButton = InitHelper.initButton(145, 5, 135, 30, "Load Preferences", "loadPreferences", this);
+        loadPreferencesButton.setFont(loadPreferencesButton.getFont().deriveFont(11f));
+        add(loadPreferencesButton);
 
         JButton formatButton = InitHelper.initButton(width / 2 - 50, 20, 100, 40, "Format!", "format", this);
         add(formatButton);
@@ -248,7 +252,35 @@ public class Screen extends JPanel implements ActionListener {
         prop.setProperty("separator", InitHelper.getStringContents(separatorField.getTextField(), ","));
     }
 
-    private Properties defaultProperties() {
+    private void loadPreferences() {
+        loadBoolProperties();
+        // loadIntProperties();
+        loadStringProperties();
+    }
+
+    private void loadBoolProperties() {
+        bracketBoolButton.setOn(Boolean.parseBoolean(prop.getProperty("brackets")));
+        spacesBetweenBoolButton.setOn(Boolean.parseBoolean(prop.getProperty("spacesBetween")));
+        removeOutstandingSpacesBoolButton.setOn(Boolean.parseBoolean(prop.getProperty("removeOutstandingSpaces")));
+    }
+
+    private void loadIntProperties() {
+        characterLimitMenu.setLimit(Integer.parseInt(prop.getProperty("maxChars")));
+        characterLimitMenu.setCustomLimit(Integer.parseInt(prop.getProperty("customMax")));
+    }
+
+    private void loadStringProperties() {
+        prefixField.getTextField().setText(prop.getProperty("itemPrefix"));
+        suffixField.getTextField().setText(prop.getProperty("itemSuffix"));
+
+        listPrefixField.getTextField().setText(prop.getProperty("listPrefix"));
+        listSuffixField.getTextField().setText(prop.getProperty("listSuffix"));
+
+        betweenField.getTextField().setText(prop.getProperty("betweenItems"));
+        separatorField.getTextField().setText(prop.getProperty("separator"));
+    }
+
+    private static Properties defaultProperties() {
         Properties prop = new Properties();
         prop.setProperty("brackets", "true");
         prop.setProperty("spacesBetween", "false");
@@ -286,6 +318,8 @@ public class Screen extends JPanel implements ActionListener {
             newPreferences();
         } else if ("savePreferences".equals(e.getActionCommand())) {
             savePreferences();
+        } else if ("loadPreferences".equals(e.getActionCommand())) {
+            loadPreferences();
         } else {
             System.out.println("Unknown Action!");
         }
