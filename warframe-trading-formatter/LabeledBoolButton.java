@@ -1,9 +1,8 @@
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import java.awt.event.*;
 
-public class LabeledBoolButton extends JPanel implements ActionListener {
+public class LabeledBoolButton extends JPanel {
 
     private static final long serialVersionUID = 1L;
 
@@ -40,11 +39,6 @@ public class LabeledBoolButton extends JPanel implements ActionListener {
     }
 
     public boolean isOn() { return boolButton.isOn(); }
-
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        
-    }
 
     public static int getHEIGHT() { return HEIGHT; }
 
