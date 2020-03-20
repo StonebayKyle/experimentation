@@ -31,15 +31,15 @@ public class CharacterLimitMenu extends JPanel implements ActionListener {
     }
 
     private void makeButtons() {
-        ValuedToggleButton noLimitButton = initValuedButton(0, 30, "None", limit, true, "noLimit");
+        ValuedToggleButton noLimitButton = initValuedButton(0, 30, "None", 0, true, "noLimit");
         add(noLimitButton);
 
-        ValuedToggleButton pmLimitButton = initValuedButton(125, 30, "Private", 100, false, "pmLimit");
+        ValuedToggleButton pmLimitButton = initValuedButton(125, 30, "Private", 300, false, "pmLimit");
         add(pmLimitButton);
 
-        ValuedToggleButton relayLimitButton = initValuedButton(0, 70, "Relay", 150, false, "relayLimit");
+        ValuedToggleButton relayLimitButton = initValuedButton(0, 70, "Relay", 300, false, "relayLimit");
         add(relayLimitButton);
-        ValuedToggleButton tradeLimitButton = initValuedButton(125, 70, "Trade", 110, false, "tradeLimit");
+        ValuedToggleButton tradeLimitButton = initValuedButton(125, 70, "Trade", 180, false, "tradeLimit");
         add(tradeLimitButton);
 
         ValuedToggleButton customLimitButton = makeCustomLimitButton(0, 110, "Custom", limit, false, "customLimit",
