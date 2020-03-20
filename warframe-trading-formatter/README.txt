@@ -2,14 +2,17 @@ Tool created by StonebayKyle
 ------------------------------
 Do not redistribute this software without receiving explicit permission from the author.
 ------------------------------
-This is a simple program that allows you to automatically format text for trading purposes.
-It was created with Warframe trading in mind, but can be used for many other applications due to the customizable options.
+This is a simple program that allows you to automatically format text.
+It was created with Warframe trading specifically, but can be used for applications due to the customizable options.
 
 
 REQUIREMENTS:
 Java 1.8 - Download at https://java.com/en/download/
 
 WHAT YOU SHOULD KNOW:
+Due to the lack of an official inventory API for Warframe, you have to manually type your inventory into the program.
+RECOMMENDED: Type your inventory in a separate text file and paste from that into the program.
+             - There is an undo feature to recover your original input, but that resets once the program is closed.
 --------- Buttons and Fields ---------
 Format! - Formats your list from the large text area according to the entered settings.
         - When making changes, be sure to go back (undo) to your original, unmodified, text, or it will do a format on top of another format.
@@ -17,7 +20,7 @@ Undo    - Undoes a format, able to revert back up to 20 formats. Useful to undo,
 
 ALL FIELDS: All characters matter, including spaces. 
 
-Linkable Brackets - Places opening and closing brackets around each item
+Linkable Brackets - Places opening and closing brackets around each item (Ex: [item])
 
 Prefix - Places the specified text before each item (Ex: P[item])
 Suffix - Places the specified text after  each item (Ex: [item]S)
@@ -37,12 +40,13 @@ Max Characters Per Copy: __
     - This is useful for automatically preparing your text to be chat channel compatible in-game, where character limits can be annoying to circumvent.
     - If an item (or items) is larger than the selected character limit, they will be inserted into the "Overflow" section at the bottom of the output.
 
+Sorting - Sorts items alphabetically, inverse alphabetically, or randomly each format.
+
 
 --------- Files ---------
 RECOMMENDED: Place this program in its own folder, so your data isn't accidentally overwritten.
 input.txt - User's initial input into the main text box, saved upon pressing "Format!" (WARNING: will be overwritten by future formats)
 output.txt - Formatted result based on the user's input and settings. Result is also printed in the main text box.
-config.properties (TODO) - Stores user preferences for each setting, saved upon pressing "Save Preferences."
 
 
 

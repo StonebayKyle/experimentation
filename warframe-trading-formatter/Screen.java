@@ -33,8 +33,8 @@ public class Screen extends JPanel implements ActionListener {
     private SortMenu sortMenu;
 
     private static final int WIDTH_DEFAULT = 800;
-    private static final int HEIGHT_DEFAULT = 800;
-    private static final String TITLE_DEFAULT = "Warframe Trading Text Formatter";
+    private static final int HEIGHT_DEFAULT = 560;
+    private static final String TITLE_DEFAULT = "Warframe Trading Text Formatter - Created by StonebayKyle";
 
     public Screen(String title, int width, int height) {
         this.title = title;
