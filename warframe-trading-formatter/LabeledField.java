@@ -18,7 +18,7 @@ public class LabeledField extends JPanel implements ActionListener {
 
     public LabeledField(int x, int y, String labelText, String fieldText) {
         init(labelText, fieldText);
-        setBounds(x, y, textField.getX()+(int)(textField.getWidth()*1.3), HEIGHT);
+        setBounds(x, y, textField.getX()+(int)(textField.getWidth()*1.1), HEIGHT);
     }
 
     public LabeledField(int x, int y, String labelText, String fieldText, String defaultLabelText) {

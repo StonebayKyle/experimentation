@@ -13,7 +13,9 @@ public class Formatter {
 
     private String prefix;
     private String suffix;
+
     private String between;
+    private String tagger;
 
     private String listPrefix;
     private String listSuffix;
@@ -32,7 +34,9 @@ public class Formatter {
         
         prefix = "";
         suffix = "";
+
         between = "";
+        tagger = "";
 
         listPrefix = "";
         listSuffix = "";
@@ -42,7 +46,7 @@ public class Formatter {
     }
     
     public Formatter(ArrayList<String> items, boolean needBrackets, boolean needSpacesBetween, boolean shouldRemoveOutstandingSpaces,
-    String prefix, String suffix, String listPrefix, String listSuffix, String between, int sortID, int characterLimit) {
+    String prefix, String suffix, String listPrefix, String listSuffix, String between, String tagger, int sortID, int characterLimit) {
         this.items = items;
         
         this.needBrackets = needBrackets;
@@ -51,7 +55,9 @@ public class Formatter {
         
         this.prefix = prefix;
         this.suffix = suffix;
+
         this.between = between;
+        this.tagger = tagger;
 
         this.listPrefix = listPrefix;
         this.listSuffix = listSuffix;
@@ -150,7 +156,7 @@ public class Formatter {
         int charactersThisCopy = 0;
 
         // must subtract limit by everything in concatItems() that wasn't already placed into the items list as one item.
-        // for things inside of the concatItems() loop, that must be handled inside the loop.
+        // for things inside of the concatItems() loop, that must be handled inside the loop (such as appendBetween).
         characterLimit -= listPrefix.length() + listSuffix.length();
 
         for (int i = 0; i < items.size(); i++) {
@@ -250,8 +256,19 @@ public class Formatter {
     }
 
     private String modifyEnd(String item) {
-        if (needBrackets) item += "]";
-        item += suffix;
+        int tagIndex = item.indexOf(tagger);
+        if (tagIndex != -1 && tagIndex < item.length()-1) { // make sure there is a tagIndex and there is text after tagIndex
+            String tag = item.substring(tagIndex+1, item.length()); // get tag
+            item = item.substring(0, tagIndex); // remove tag from item
+
+            if (needBrackets) item += "]";
+            item += suffix;
+            
+            item += tag; // put tag after suffix
+        } else { // no tag
+            if (needBrackets) item += "]";
+            item += suffix;
+        }
 
         return item;
     }

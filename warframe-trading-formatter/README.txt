@@ -26,6 +26,10 @@ Prefix - Places the specified text before each item (Ex: P[item])
 Suffix - Places the specified text after  each item (Ex: [item]S)
 Between - Places the specified text in between each item (Ex: [item]B[item])
 
+Item Tagger - Tells the formatter where to distinguish items with tags (Ex: itemT_ ,). Default: :
+            - Tags are individually specified labels that can go after items, such as item price, blueprint, set, etc.
+            - Example: item:5p >> [item]5p
+            - The first tagger found in the item will be the tagger used for tagging.
 Separation Marker - Tells the formatter where to distinguish items (Ex: item1,item2). Default: ,
 
 List Prefix - Places the specified text before each list (Ex: WTS[list])

@@ -28,12 +28,13 @@ public class Screen extends JPanel implements ActionListener {
 
     private LabeledField listPrefixField;
     private LabeledField listSuffixField;
+    private LabeledField itemTagField;
 
     private CharacterLimitMenu characterLimitMenu;
     private SortMenu sortMenu;
 
     private static final int WIDTH_DEFAULT = 800;
-    private static final int HEIGHT_DEFAULT = 560;
+    private static final int HEIGHT_DEFAULT = 580;
     private static final String TITLE_DEFAULT = "Warframe Trading Text Formatter - Created by StonebayKyle";
 
     public Screen(String title, int width, int height) {
@@ -127,9 +128,12 @@ public class Screen extends JPanel implements ActionListener {
                 "List Prefix:", "_list");
         add(listPrefixField);
 
-        listSuffixField = new LabeledField((suffixField.getX()) + suffixField.getWidth(), suffixField.getY(),
+        listSuffixField = new LabeledField(suffixField.getX() + suffixField.getWidth(), suffixField.getY(),
                 "List Suffix:", "list_");
         add(listSuffixField);
+
+        itemTagField = new LabeledField(betweenField.getX() + betweenField.getWidth(), betweenField.getY(), "Item Tagger:", "item*_", "(default: : )");
+        add(itemTagField);
     }
 
     private JScrollPane initScrollPane(int w, int h) {
@@ -151,7 +155,9 @@ public class Screen extends JPanel implements ActionListener {
                 InitHelper.getStringContents(suffixField.getTextField()),
                 InitHelper.getStringContents(listPrefixField.getTextField()),
                 InitHelper.getStringContents(listSuffixField.getTextField()),
-                InitHelper.getStringContents(betweenField.getTextField()), sortMenu.getSortID(), characterLimitMenu.getLimit());
+                InitHelper.getStringContents(betweenField.getTextField()), 
+                InitHelper.getStringContents(itemTagField.getTextField(), ":"),
+                sortMenu.getSortID(), characterLimitMenu.getLimit());
 
         formatter.setModifications();
 
