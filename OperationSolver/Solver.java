@@ -5,7 +5,7 @@ public class Solver {
 
     private Solver() {}
 
-
+    // this method randomly guesses many times per input permutation. It is slower, and is not guarenteed to work.
     public static Solution slowSolve(double[] inputNums, double targetNum) {
         Solution solution = new Solution(targetNum);
         int attempts = 0; // attempt counter
