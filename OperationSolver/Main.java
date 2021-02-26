@@ -21,7 +21,7 @@ public class Main {
         System.out.println("Operation Solver Started.\n");
         Solution solution = Solver.solve(inputNums, targetNum);
 
-        System.out.println("Solution:\n" + solution);
+        System.out.println(solution);
     }
 
     private static double[] getInputNums() {
