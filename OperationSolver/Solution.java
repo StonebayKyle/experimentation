@@ -34,7 +34,7 @@ public class Solution {
             // without operations set, there is no solution.
             return "Solution:\nNo Solution";
         }
-        
+
         String out = "Solution: (order is left -> right)\n";
 
         for (int i = 0; i < inputPermutation.length; i++) {
@@ -46,6 +46,24 @@ public class Solution {
         }
 
         out += " = " + targetNum;
+
+        out += "\n\nWrapped Solution (valid equation):\n";
+        for (int i = 0; i < inputPermutation.length-1; i++) {
+            out += "(";
+        }
+
+        for (int i = 0; i < inputPermutation.length; i++) {
+            if (i == 0) {
+                out += inputPermutation[i] + " " + operations[i] + " ";
+            } else if (i < inputPermutation.length-1) {
+                out += inputPermutation[i] + ") " + operations[i] + " ";
+            } else {
+                out += inputPermutation[i];
+            }
+        }
+
+        out += " = " + targetNum;
+
         return out;
     }
 }
