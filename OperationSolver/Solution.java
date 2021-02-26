@@ -30,12 +30,12 @@ public class Solution {
     }
 
     public static String genericToString(double[] inputPermutation, double targetNum, Operation[] operations) {
-        String out = "Solution:\n";
         if (operations == null) {
             // without operations set, there is no solution.
-            out += "No Solution.";
-            return out;
+            return "Solution:\nNo Solution";
         }
+        
+        String out = "Solution: (order is left -> right)\n";
 
         for (int i = 0; i < inputPermutation.length; i++) {
             if (i < inputPermutation.length-1) {
