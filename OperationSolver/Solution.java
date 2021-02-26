@@ -7,7 +7,6 @@ public class Solution {
         this.targetNum = targetNum;
     }
     
-    
     public Operation[] getOperations() {
         return operations;
     }
@@ -26,7 +25,6 @@ public class Solution {
         setOperations(operations);
     }
 
-    
     public String toString() {
         return genericToString(inputPermutation, targetNum, operations);
     }
