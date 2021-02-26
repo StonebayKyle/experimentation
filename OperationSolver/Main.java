@@ -36,7 +36,7 @@ public class Main {
         while (moreInputs) {
             boolean fail = true; // also likely not necessary, but avoiding a while(true)
             while (fail) {
-                System.out.println("Enter number ('s' to stop):");
+                System.out.println("Enter number ('" + stopChar + "' to stop):");
                 String input = scan.nextLine();
                 // stop early
                 if (input.length() != 0 && input.charAt(0) == stopChar) {
