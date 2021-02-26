@@ -33,7 +33,7 @@ public class Solver {
                 }
                 attempts++;
                 if (validOperation(permutation, targetNum, currentOperations)) {
-                    System.out.println(attempts + ": SUCCESS! " + Solution.genericToString(permutation, targetNum, currentOperations));
+                    System.out.println("Attempt #" + attempts + ": SUCCESS!");
                     solution.setSolution(permutation, currentOperations);
                     return solution;
                 } else {
@@ -83,7 +83,7 @@ public class Solver {
                 Operation[] operations = Main.operationListToArray(operationObj);
                 attempts++;
                 if (validOperation(permutation, targetNum, operations)) {
-                    System.out.println(attempts + ": SUCCESS! " + Solution.genericToString(permutation, targetNum, operations));
+                    System.out.println("Attempt #" + attempts + ": SUCCESS!");
                     solution.setSolution(permutation, operations);
                     return solution;
                 } else {
