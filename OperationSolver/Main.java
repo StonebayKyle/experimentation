@@ -39,7 +39,7 @@ public class Main {
                 System.out.println("Enter number ('" + stopChar + "' to stop):");
                 String input = scan.nextLine();
                 // stop early
-                if (input.length() != 0 && input.charAt(0) == stopChar) {
+                if (input.length() != 0 && (Character.toLowerCase(input.charAt(0)) == stopChar)) {
                     moreInputs = false;
                     break;
                 }
