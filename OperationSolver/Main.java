@@ -95,7 +95,7 @@ public class Main {
         return array;
     }
 
-    public static double[] objToPrimDouble(Double[] doubles) {
+    public static double[] objToPrimitiveDouble(Double[] doubles) {
         double[] out = new double[doubles.length];
         for (int i = 0; i < doubles.length; i++) {
             out[i] = doubles[i];
