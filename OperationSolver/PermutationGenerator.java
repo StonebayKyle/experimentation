@@ -17,8 +17,19 @@ public class PermutationGenerator {
         System.out.println(Main.list2DString(save));
     }
 
+    // generates all permutations of the arrayList, and then saves the results in outputList
+    public static void permutingArray(java.util.List<Double> arrayList, int element, ArrayList<Double[]> outputList) {
+        for (int i = element; i < arrayList.size(); i++) {
+            java.util.Collections.swap(arrayList, i, element);
+            permutingArray(arrayList, element + 1, outputList);
+            java.util.Collections.swap(arrayList, element, i);
+        }
+        if (element == arrayList.size() - 1) {
+            outputList.add((Double[])arrayList.toArray(new Double[0]));
+        }
+    }
 
-    // These two methods highly modified from https://stackoverflow.com/questions/53148835/how-to-print-out-x-number-of-permutations-in-java
+    // The repeatingPermutations functions are highly modified from https://stackoverflow.com/questions/53148835/how-to-print-out-x-number-of-permutations-in-java
 
     // save is the array where the permutation is saved, and count is the amount of permutations already generated.
     // pos is the current index, and K is the length of permutation you want to save.

@@ -13,13 +13,11 @@ public class Solver {
         ArrayList<Double> inputList = Main.doubleArrayToList(inputNums);
         ArrayList<Double[]> permutationList = new ArrayList<>();
         System.out.println("Generating possible permutations of the input numbers...");
-        permutingArray(inputList, 0, permutationList);
+        PermutationGenerator.permutingArray(inputList, 0, permutationList);
         System.out.println("Complete. There are " + permutationList.size() + " permutations of the input numbers.");
 
-        Operation[] currentOperations = new Operation[inputNums.length-1];
         // permutation random guessing is slow. Other solve function calculate permutations of operations.
-        
-        
+        Operation[] currentOperations = new Operation[inputNums.length-1];
         final int attemptsPerPermutation = 1000000;
 
         int permIncrement = 0;
@@ -60,7 +58,7 @@ public class Solver {
         System.out.println("Generating possible permutations of the input numbers...");
         ArrayList<Double> inputList = Main.doubleArrayToList(inputNums);
         ArrayList<Double[]> permutationList = new ArrayList<>();
-        permutingArray(inputList, 0, permutationList);
+        PermutationGenerator.permutingArray(inputList, 0, permutationList);
         System.out.println("Complete. There are " + permutationList.size() + " permutations of the input numbers.");
 
         System.out.println("Generating possible permutations of the operations at length " + inputNums.length + "...");
@@ -110,18 +108,6 @@ public class Solver {
         }
 
         return currentValue == targetNum;
-    }
-
-
-    private static void permutingArray(java.util.List<Double> arrayList, int element, ArrayList<Double[]> outputList) {
-        for (int i = element; i < arrayList.size(); i++) {
-            java.util.Collections.swap(arrayList, i, element);
-            permutingArray(arrayList, element + 1, outputList);
-            java.util.Collections.swap(arrayList, element, i);
-        }
-        if (element == arrayList.size() - 1) {
-            outputList.add((Double[])arrayList.toArray(new Double[0]));
-        }
     }
 
     private static double[] objToPrimDouble(Double[] doubles) {
