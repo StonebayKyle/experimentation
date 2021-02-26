@@ -10,7 +10,7 @@ public class Solver {
         Solution solution = new Solution(targetNum);
         int attempts = 0; // attempt counter
         
-        ArrayList<Double> inputList = Main.arrayToList(inputNums);
+        ArrayList<Double> inputList = Main.doubleArrayToList(inputNums);
         ArrayList<Double[]> permutationList = new ArrayList<>();
         System.out.println("Generating possible permutations of the input numbers...");
         permutingArray(inputList, 0, permutationList);
@@ -58,7 +58,7 @@ public class Solver {
         int attempts = 0; // attempt counter
         
         System.out.println("Generating possible permutations of the input numbers...");
-        ArrayList<Double> inputList = Main.arrayToList(inputNums);
+        ArrayList<Double> inputList = Main.doubleArrayToList(inputNums);
         ArrayList<Double[]> permutationList = new ArrayList<>();
         permutingArray(inputList, 0, permutationList);
         System.out.println("Complete. There are " + permutationList.size() + " permutations of the input numbers.");

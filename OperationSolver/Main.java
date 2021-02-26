@@ -55,7 +55,7 @@ public class Main {
             }
         }
 
-        return listToArray(inputs);
+        return doubleListToArray(inputs);
     }
 
     private static double getRequiredNumber(String prompt) {
@@ -76,7 +76,17 @@ public class Main {
         return 0; // this shouldn't happen
     }
 
-    public static double[] listToArray(ArrayList<Double> list) {
+    
+    public static Operation[] operationListToArray(ArrayList<Operation> list) {
+        Operation[] array = new Operation[list.size()];
+        for (int i = 0; i < array.length; i++) {
+            array[i] = list.get(i);
+        }
+        
+        return array;
+    }
+    
+    public static double[] doubleListToArray(ArrayList<Double> list) {
         double[] array = new double[list.size()];
         for (int i = 0; i < array.length; i++) {
             array[i] = list.get(i);
@@ -85,16 +95,7 @@ public class Main {
         return array;
     }
 
-    public static Operation[] operationListToArray(ArrayList<Operation> list) {
-        Operation[] array = new Operation[list.size()];
-        for (int i = 0; i < array.length; i++) {
-            array[i] = list.get(i);
-        }
-
-        return array;
-    }
-
-    public static ArrayList<Double> arrayToList(double[] array) {
+    public static ArrayList<Double> doubleArrayToList(double[] array) {
         ArrayList<Double> list = new ArrayList<>();
         for (double num : array) {
             list.add(num);
