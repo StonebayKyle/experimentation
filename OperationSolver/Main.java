@@ -85,7 +85,7 @@ public class Main {
         
         return array;
     }
-    
+
     public static double[] doubleListToArray(ArrayList<Double> list) {
         double[] array = new double[list.size()];
         for (int i = 0; i < array.length; i++) {
@@ -93,6 +93,14 @@ public class Main {
         }
 
         return array;
+    }
+
+    public static double[] objToPrimDouble(Double[] doubles) {
+        double[] out = new double[doubles.length];
+        for (int i = 0; i < doubles.length; i++) {
+            out[i] = doubles[i];
+        }
+        return out;
     }
 
     public static ArrayList<Double> doubleArrayToList(double[] array) {

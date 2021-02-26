@@ -23,7 +23,7 @@ public class Solver {
         int permIncrement = 0;
         // for each permutation
         for (Double[] permutationObj : permutationList) {
-            double[] permutation = objToPrimDouble(permutationObj);
+            double[] permutation = Main.objToPrimDouble(permutationObj);
             System.out.println(progressString(permIncrement, permutationList.size()));
             System.out.println("Attempting next permutation: " + Arrays.toString(permutation));
             // for each currentOperation
@@ -75,7 +75,7 @@ public class Solver {
         int permIncrement = 0;
         // for each permutation of input
         for (Double[] permutationObj : permutationList) {
-            double[] permutation = objToPrimDouble(permutationObj);
+            double[] permutation = Main.objToPrimDouble(permutationObj);
             System.out.println(progressString(permIncrement, permutationList.size()));
             System.out.println("Attempting next permutation: " + Arrays.toString(permutation));
             // for each possible operation permutation
@@ -108,14 +108,6 @@ public class Solver {
         }
 
         return currentValue == targetNum;
-    }
-
-    private static double[] objToPrimDouble(Double[] doubles) {
-        double[] out = new double[doubles.length];
-        for (int i = 0; i < doubles.length; i++) {
-            out[i] = doubles[i];
-        }
-        return out;
     }
 
     private static String progressString(int currentIncrement, int totalPermutations) {
