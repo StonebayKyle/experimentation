@@ -28,15 +28,16 @@ public class Main {
         ArrayList<Double> inputs = new ArrayList<>();
 
         final char stopChar = 's';
+        final int maxInputs = 10;
 
-        System.out.println("\nEnter numbers that must be used to reach the target number. Type '" + stopChar + "' to stop.");
-        inputs.add(getRequiredNumber("Enter number: "));
+        System.out.println("\nEnter numbers that must be used to reach the target number. You can input up to " + maxInputs + " numbers.");
+        inputs.add(getRequiredNumber("[" + (inputs.size() + 1) + "] Enter number: "));
 
         boolean moreInputs = true; // likely not necessary, but avoiding a while(true)
         while (moreInputs) {
             boolean fail = true; // also likely not necessary, but avoiding a while(true)
             while (fail) {
-                System.out.println("Enter number ('" + stopChar + "' to stop):");
+                System.out.println("[" + (inputs.size() + 1) + "] Enter number ('" + stopChar + "' to stop):");
                 String input = scan.nextLine();
                 // stop early
                 if (input.length() != 0 && (Character.toLowerCase(input.charAt(0)) == stopChar)) {
@@ -48,6 +49,10 @@ public class Main {
                 try {
                     fail = false;
                     inputs.add(Double.parseDouble(input));
+                    if (inputs.size() >= maxInputs) {
+                        moreInputs = false;
+                        System.out.println("Max (" + maxInputs + ") entered.");
+                    }
                 } catch (Exception e) {
                     fail = true;
                     System.out.println("Invalid input! Try again.");
