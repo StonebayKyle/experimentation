@@ -48,7 +48,7 @@ public class Solution {
         out += " = " + targetNum;
 
         out += "\n\nWrapped Solution (valid equation):\n";
-        for (int i = 0; i < inputPermutation.length-1; i++) {
+        for (int i = 0; i < inputPermutation.length-2; i++) {
             out += "(";
         }
 
